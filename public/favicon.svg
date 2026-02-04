@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#d4a84b"/>
+      <stop offset="50%" style="stop-color:#b8860b"/>
+      <stop offset="100%" style="stop-color:#8b6914"/>
+    </linearGradient>
+  </defs>
+  <!-- Laurel wreath -->
+  <g fill="url(#gold)">
+    <!-- Left branch -->
+    <path d="M25 50 Q15 40, 20 30 Q25 35, 28 45 Q25 48, 25 50"/>
+    <path d="M28 55 Q15 50, 18 38 Q24 42, 30 52 Q28 54, 28 55"/>
+    <path d="M32 60 Q18 58, 20 45 Q27 50, 34 58 Q32 60, 32 60"/>
+    <path d="M36 65 Q22 66, 25 52 Q32 57, 38 64 Q36 66, 36 65"/>
+    <path d="M42 68 Q30 72, 32 58 Q38 62, 44 68 Q42 70, 42 68"/>
+    <!-- Right branch -->
+    <path d="M75 50 Q85 40, 80 30 Q75 35, 72 45 Q75 48, 75 50"/>
+    <path d="M72 55 Q85 50, 82 38 Q76 42, 70 52 Q72 54, 72 55"/>
+    <path d="M68 60 Q82 58, 80 45 Q73 50, 66 58 Q68 60, 68 60"/>
+    <path d="M64 65 Q78 66, 75 52 Q68 57, 62 64 Q64 66, 64 65"/>
+    <path d="M58 68 Q70 72, 68 58 Q62 62, 56 68 Q58 70, 58 68"/>
+  </g>
+  <!-- SPQR letters -->
+  <text x="50" y="45" font-family="serif" font-size="14" font-weight="bold" fill="#2c1810" text-anchor="middle">SPQR</text>
+  <!-- Roman numeral decoration -->
+  <text x="50" y="62" font-family="serif" font-size="10" fill="#5c3d2e" text-anchor="middle">DCCLIII</text>
+</svg>

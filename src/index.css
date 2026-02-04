@@ -1,0 +1,239 @@
+/* CSS Custom Properties - Papyrus/Ink Theme */
+:root {
+  /* Colors */
+  --color-papyrus-light: #f5e6c8;
+  --color-papyrus-dark: #e8d4a8;
+  --color-papyrus-aged: #d4c4a0;
+  --color-papyrus-cream: #faf3e3;
+  --color-ink-black: #2c1810;
+  --color-ink-brown: #5c3d2e;
+  --color-ink-faded: #8b6b4a;
+  --color-accent-red: #8b2500;
+  --color-accent-gold: #b8860b;
+  --color-accent-gold-light: #d4a84b;
+
+  /* Typography */
+  --font-heading: 'Cinzel', serif;
+  --font-heading-decorative: 'Cinzel Decorative', serif;
+  --font-body: 'EB Garamond', serif;
+
+  /* Spacing */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(44, 24, 16, 0.12);
+  --shadow-md: 0 4px 6px rgba(44, 24, 16, 0.1), 0 2px 4px rgba(44, 24, 16, 0.06);
+  --shadow-lg: 0 10px 15px rgba(44, 24, 16, 0.1), 0 4px 6px rgba(44, 24, 16, 0.05);
+  --shadow-card: 0 2px 8px rgba(92, 61, 46, 0.15), 0 1px 3px rgba(44, 24, 16, 0.1);
+  --shadow-card-hover: 0 8px 25px rgba(92, 61, 46, 0.2), 0 4px 10px rgba(44, 24, 16, 0.1);
+
+  /* Borders */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 400ms ease;
+
+  /* Layout */
+  --max-width: 900px;
+  --timeline-width: 4px;
+}
+
+/* Reset and Base Styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  line-height: 1.7;
+  color: var(--color-ink-black);
+  background-color: var(--color-papyrus-light);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Subtle paper texture */
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(212, 196, 160, 0.03) 2px,
+      rgba(212, 196, 160, 0.03) 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(212, 196, 160, 0.03) 2px,
+      rgba(212, 196, 160, 0.03) 4px
+    ),
+    linear-gradient(
+      180deg,
+      var(--color-papyrus-light) 0%,
+      var(--color-papyrus-cream) 50%,
+      var(--color-papyrus-light) 100%
+    );
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--color-ink-black);
+}
+
+h1 {
+  font-size: 2.5rem;
+  letter-spacing: 0.15em;
+}
+
+h2 {
+  font-size: 1.875rem;
+  letter-spacing: 0.1em;
+}
+
+h3 {
+  font-size: 1.5rem;
+  letter-spacing: 0.05em;
+}
+
+h4 {
+  font-size: 1.25rem;
+}
+
+p {
+  margin-bottom: var(--spacing-md);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+a {
+  color: var(--color-accent-red);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-ink-brown);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+button {
+  font-family: var(--font-heading);
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Utility Classes */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-papyrus-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-ink-faded);
+  border-radius: 6px;
+  border: 3px solid var(--color-papyrus-dark);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-brown);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-accent-gold-light);
+  color: var(--color-ink-black);
+}
+
+/* Focus Styles */
+:focus-visible {
+  outline: 2px solid var(--color-accent-gold);
+  outline-offset: 2px;
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+
+  h1 {
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+}

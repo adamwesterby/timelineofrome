@@ -1,0 +1,304 @@
+.event {
+  position: relative;
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+/* Major event layout */
+.major {
+  grid-template-columns: 1fr auto 1fr;
+  align-items: start;
+}
+
+.major:nth-child(odd) {
+  grid-template-areas: "card dot year";
+}
+
+.major:nth-child(even) {
+  grid-template-areas: "year dot card";
+}
+
+.major:nth-child(odd) .card {
+  grid-area: card;
+  justify-self: end;
+}
+
+.major:nth-child(even) .card {
+  grid-area: card;
+  justify-self: start;
+}
+
+.major .dot {
+  grid-area: dot;
+}
+
+.major:nth-child(odd) .yearBadge {
+  grid-area: year;
+  justify-self: start;
+}
+
+.major:nth-child(even) .yearBadge {
+  grid-area: year;
+  justify-self: end;
+}
+
+/* Minor event layout */
+.minor {
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+}
+
+.minor:nth-child(odd) {
+  grid-template-areas: "card dot year";
+}
+
+.minor:nth-child(even) {
+  grid-template-areas: "year dot card";
+}
+
+.minor:nth-child(odd) .card {
+  grid-area: card;
+  justify-self: end;
+}
+
+.minor:nth-child(even) .card {
+  grid-area: card;
+  justify-self: start;
+}
+
+.minor .dot {
+  grid-area: dot;
+}
+
+.minor:nth-child(odd) .yearBadge {
+  grid-area: year;
+  justify-self: start;
+}
+
+.minor:nth-child(even) .yearBadge {
+  grid-area: year;
+  justify-self: end;
+}
+
+/* Timeline dot */
+.dot {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+
+.dotInner {
+  width: 12px;
+  height: 12px;
+  background: var(--color-papyrus-light);
+  border: 3px solid var(--color-accent-gold);
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+}
+
+.major .dotInner {
+  width: 16px;
+  height: 16px;
+  border-width: 4px;
+  border-color: var(--color-accent-red);
+}
+
+.event:hover .dotInner {
+  transform: scale(1.2);
+  background: var(--color-accent-gold);
+}
+
+.major:hover .dotInner {
+  background: var(--color-accent-red);
+}
+
+/* Year badge */
+.yearBadge {
+  padding: var(--spacing-xs) var(--spacing-md);
+}
+
+.year {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-ink-faded);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.major .year {
+  font-size: 1.125rem;
+  color: var(--color-accent-red);
+}
+
+/* Card */
+.card {
+  background: var(--color-papyrus-dark);
+  border: 1px solid var(--color-papyrus-aged);
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow var(--transition-fast);
+  max-width: 380px;
+}
+
+.major .card {
+  max-width: 420px;
+  border-color: rgba(139, 37, 0, 0.2);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.cardButton {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+/* Image */
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 60%,
+    rgba(44, 24, 16, 0.3) 100%
+  );
+  pointer-events: none;
+}
+
+/* Content */
+.content {
+  padding: var(--spacing-md);
+}
+
+.minor .content {
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-ink-black);
+  margin: 0 0 var(--spacing-xs);
+  line-height: 1.4;
+}
+
+.minor .title {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.summary {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-ink-brown);
+  line-height: 1.6;
+  margin: 0 0 var(--spacing-sm);
+}
+
+.expandHint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  color: var(--color-ink-faded);
+  font-style: italic;
+}
+
+.expandIcon {
+  color: var(--color-ink-faded);
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+  .event {
+    grid-template-columns: 40px 1fr;
+    grid-template-areas: "dot content";
+    gap: var(--spacing-sm);
+  }
+
+  .major,
+  .minor,
+  .major:nth-child(odd),
+  .major:nth-child(even),
+  .minor:nth-child(odd),
+  .minor:nth-child(even) {
+    grid-template-columns: 40px 1fr;
+    grid-template-areas:
+      "dot year"
+      "dot card";
+  }
+
+  .dot {
+    grid-area: dot;
+    justify-self: center;
+  }
+
+  .yearBadge,
+  .major:nth-child(odd) .yearBadge,
+  .major:nth-child(even) .yearBadge,
+  .minor:nth-child(odd) .yearBadge,
+  .minor:nth-child(even) .yearBadge {
+    grid-area: year;
+    justify-self: start;
+    padding: 0;
+  }
+
+  .card,
+  .major .card,
+  .major:nth-child(odd) .card,
+  .major:nth-child(even) .card,
+  .minor:nth-child(odd) .card,
+  .minor:nth-child(even) .card {
+    grid-area: card;
+    justify-self: stretch;
+    max-width: none;
+  }
+
+  .year {
+    font-size: 0.9rem;
+  }
+
+  .major .year {
+    font-size: 1rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .summary {
+    font-size: 0.9rem;
+  }
+}
