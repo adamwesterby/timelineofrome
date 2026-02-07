@@ -6,6 +6,8 @@ import type {
   SceneCamera,
   SceneLayer,
   SceneSpec,
+  SceneVisualGrade,
+  SingleImageSceneSpec,
 } from '../types/scene';
 
 import foundingOfRomeBg from '../assets/scenes/founding-of-rome/bg.webp';
@@ -118,7 +120,12 @@ import fallWesternEmpireBgV2 from '../assets/scenes-v2/fall-western-empire/bg.sv
 import fallWesternEmpireMidV2 from '../assets/scenes-v2/fall-western-empire/mid.svg';
 import fallWesternEmpireFgV2 from '../assets/scenes-v2/fall-western-empire/fg.svg';
 
-type SceneProfile = 'battle' | 'ceremony' | 'collapse' | 'map';
+const singleImageAssets = import.meta.glob('../assets/scenes-v3/*/scene.webp', {
+  eager: true,
+  import: 'default',
+}) as Record<string, string>;
+
+type SceneProfile = SceneVisualGrade;
 
 interface SceneSpecVersions {
   v1: CinematicSceneSpec;
@@ -208,6 +215,52 @@ function buildProfileSpec(
     accentPreset,
     accentIntensity,
     camera: cameraByProfile[profile],
+  };
+}
+
+function getSingleImageSource(eventId: string): string | undefined {
+  return singleImageAssets[`../assets/scenes-v3/${eventId}/scene.webp`];
+}
+
+const singleImageProfileByEvent: Record<string, SceneProfile> = {
+  'founding-of-rome': 'battle',
+  'republic-established': 'ceremony',
+  'gallic-sack': 'collapse',
+  'pyrrhic-war': 'battle',
+  'hannibal-crosses-alps': 'battle',
+  'battle-cannae': 'battle',
+  'carthage-destroyed': 'collapse',
+  'spartacus-revolt': 'battle',
+  rubicon: 'battle',
+  'caesar-assassination': 'collapse',
+  'augustus-princeps': 'ceremony',
+  'colosseum-opens': 'ceremony',
+  'empire-maximum': 'map',
+  'marcus-aurelius': 'battle',
+  'crisis-third-century': 'collapse',
+  'milvian-bridge': 'battle',
+  'alaric-sacks-rome': 'collapse',
+  'fall-western-empire': 'collapse',
+};
+
+function buildSingleImageSpec(
+  eventId: string,
+  src: string,
+  profile: SceneProfile
+): SingleImageSceneSpec {
+  const cameraByProfile: Record<SceneProfile, SceneCamera> = {
+    battle: battleProfile,
+    ceremony: ceremonyProfile,
+    collapse: collapseProfile,
+    map: mapProfile,
+  };
+
+  return {
+    renderMode: 'single-image',
+    fallbackIllustrationKey: eventId,
+    src,
+    camera: cameraByProfile[profile],
+    grade: profile,
   };
 }
 
@@ -568,6 +621,15 @@ const cinematicSceneSpecs: Record<string, SceneSpecVersions> = {
   },
 };
 
+const singleImageSceneSpecs = ANIMATED_EVENTS.reduce<Record<string, SingleImageSceneSpec>>((acc, event) => {
+  const src = getSingleImageSource(event.id);
+  if (!src) return acc;
+
+  const profile = singleImageProfileByEvent[event.id] ?? 'battle';
+  acc[event.id] = buildSingleImageSpec(event.id, src, profile);
+  return acc;
+}, {});
+
 const legacySceneSpecs = ANIMATED_EVENTS.reduce<Record<string, SceneSpec>>((acc, event) => {
   acc[event.id] = {
     renderMode: 'legacy-svg',
@@ -582,24 +644,44 @@ const defaultLegacySpec: SceneSpec = {
 
 function resolveVersionedSpec(
   eventId: string,
-  requestedVersion: SceneAssetVersion = 'v2'
-): CinematicSceneSpec | undefined {
+  requestedVersion: SceneAssetVersion = 'v3'
+): SceneSpec | undefined {
   const versions = cinematicSceneSpecs[eventId];
-  if (!versions) return undefined;
-  if (requestedVersion === 'v1') return versions.v1;
-  return versions.v2 ?? versions.v1;
+  const v3Spec = singleImageSceneSpecs[eventId];
+  const byVersion: Partial<Record<SceneAssetVersion, SceneSpec | undefined>> = {
+    v1: versions?.v1,
+    v2: versions?.v2,
+    v3: v3Spec,
+  };
+
+  const candidates: SceneAssetVersion[] = [requestedVersion, 'v3', 'v2', 'v1'];
+  const seen = new Set<SceneAssetVersion>();
+  for (const version of candidates) {
+    if (seen.has(version)) continue;
+    seen.add(version);
+    const resolved = byVersion[version];
+    if (resolved) return resolved;
+  }
+
+  return undefined;
 }
 
 export const sceneSpecs: Record<string, SceneSpec> = {
   ...legacySceneSpecs,
-  ...Object.fromEntries(Object.entries(cinematicSceneSpecs).map(([eventId, versions]) => [eventId, versions.v1])),
+  ...Object.fromEntries(
+    ANIMATED_EVENTS.map((event) => [
+      event.id,
+      resolveVersionedSpec(event.id, 'v3') ?? legacySceneSpecs[event.id] ?? defaultLegacySpec,
+    ])
+  ),
 };
 
 export function hasSceneVersion(eventId: string, version: SceneAssetVersion): boolean {
   const versions = cinematicSceneSpecs[eventId];
+  if (version === 'v3') return Boolean(singleImageSceneSpecs[eventId]);
   if (!versions) return false;
-  if (version === 'v1') return true;
-  return Boolean(versions.v2);
+  if (version === 'v2') return Boolean(versions.v2);
+  return Boolean(versions.v1);
 }
 
 export function getSceneSpec(
@@ -608,19 +690,20 @@ export function getSceneSpec(
     version?: SceneAssetVersion;
   }
 ): SceneSpec {
-  const requestedVersion = options?.version ?? 'v2';
-  const cinematicSpec = resolveVersionedSpec(eventId, requestedVersion);
-  if (cinematicSpec) return cinematicSpec;
+  const requestedVersion = options?.version ?? 'v3';
+  const resolvedSpec = resolveVersionedSpec(eventId, requestedVersion);
+  if (resolvedSpec) return resolvedSpec;
   return legacySceneSpecs[eventId] ?? defaultLegacySpec;
 }
 
-export function getSceneLayerSources(
+export function getSceneAssetSources(
   eventId: string,
   options?: {
     version?: SceneAssetVersion;
   }
 ): string[] {
   const spec = getSceneSpec(eventId, options);
-  if (spec.renderMode !== 'cinematic-hybrid') return [];
-  return spec.layers.map((layer) => layer.src);
+  if (spec.renderMode === 'single-image') return [spec.src];
+  if (spec.renderMode === 'cinematic-hybrid') return spec.layers.map((layer) => layer.src);
+  return [];
 }

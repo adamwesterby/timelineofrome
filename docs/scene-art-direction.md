@@ -1,11 +1,17 @@
 # Scene Art Direction (Animated Timeline)
 
-This document defines how to produce and review cinematic timeline scene art.
+This document defines how to produce and review animated timeline scene art across legacy and current renderers.
 
 ## Scope
 
-- Runtime renderer: cinematic-hybrid scene stack (`bg`, `mid`, `fg` layer images + subtle accents).
-- New manual art path: `src/pages/AnimatedTimeline/assets/scenes-v2/<event-id>/{bg,mid,fg}.svg`.
+- Runtime renderers:
+- `single-image` (`v3`) for one generated image per event.
+- `cinematic-hybrid` (`v2`/`v1`) for layered fallback (`bg`, `mid`, `fg`).
+- `legacy-svg` for illustration fallback when image assets fail.
+- Asset paths:
+- `v3`: `src/pages/AnimatedTimeline/assets/scenes-v3/<event-id>/scene.webp`
+- `v2`: `src/pages/AnimatedTimeline/assets/scenes-v2/<event-id>/{bg,mid,fg}.svg`
+- `v1`: `src/pages/AnimatedTimeline/assets/scenes/<event-id>/{bg,mid,fg}.webp`
 - Legacy generator (`scripts/generate-cinematic-assets.py`) remains available for v1 fallback only.
 
 ## Visual Constraints
@@ -13,10 +19,7 @@ This document defines how to produce and review cinematic timeline scene art.
 - Event recognizability comes first. A viewer should identify the event in under 2 seconds.
 - Preserve timeline palette and mood; avoid bright modern colors.
 - Keep lower-left overlay region calm/darker to protect text readability.
-- Use layers intentionally:
-- `bg`: environment and depth context.
-- `mid`: primary narrative subject.
-- `fg`: atmospheric framing and foreground silhouettes.
+- For `v3` single-image scenes, keep focal subject center-right and preserve empty visual breathing room in the lower-left text zone.
 
 ## Quality Rubric
 
@@ -25,12 +28,12 @@ Each scene must pass all checks:
 - Subject is recognizable at first glance.
 - Historical cue is clear and event-specific.
 - Headline/subtitle remain readable on desktop and mobile.
-- Layer composition produces clear depth when parallax animates.
+- Composition produces clear depth when pan/zoom animates.
 - Motion feels coherent and does not distract from narrative focus.
 
 ## Composition Checklist
 
-- Include one dominant focal subject in `mid`.
+- Include one dominant focal subject in the main composition.
 - Keep silhouette contrast strong enough at reduced brightness.
 - Avoid generic abstract bars/shapes without semantic meaning.
 - Avoid detail overload in the left-lower text zone.
@@ -41,39 +44,19 @@ Each scene must pass all checks:
 Use dev QA mode:
 
 - Open `/animated?qa=1`.
-- Switch `v1` and `v2` using the QA panel.
+- Switch `v1`, `v2`, and `v3` using the QA panel.
 - Review each checklist item and record pass/fail.
-- If `v2` is unavailable for an event, app will show `v1` fallback.
+- If `v3` is unavailable for an event, app will show `v2`/`v1` fallback.
+
+## Grok Prompt Workflow
+
+- Prompt source of truth: `docs/grok-imagine-prompts.md`.
+- Generate 3-5 candidates per event from the matching prompt.
+- Select one final image per event by QA checklist pass.
+- Export final image as WebP (`2048x1152`, quality 82-88).
+- If lower-left text zone is busy, regenerate with stronger "calmer lower-left" instruction.
 
 ## Notes on Assets
 
-- Use original in-repo artwork only for the current rollout.
-- Keep files vector (`.svg`) unless a future change explicitly requires raster sources.
-- Maintain one `bg`, one `mid`, and one `fg` file per event.
-
-## Full Rollout Complete
-
-Status labels:
-
-- `IMPLEMENTED_PENDING_QA`: v2 assets and scene specs are wired, awaiting full checklist signoff in QA mode.
-
-Current v2 event coverage and acceptance status:
-
-- `founding-of-rome`: `IMPLEMENTED_PENDING_QA`
-- `republic-established`: `IMPLEMENTED_PENDING_QA`
-- `gallic-sack`: `IMPLEMENTED_PENDING_QA`
-- `pyrrhic-war`: `IMPLEMENTED_PENDING_QA`
-- `hannibal-crosses-alps`: `IMPLEMENTED_PENDING_QA`
-- `battle-cannae`: `IMPLEMENTED_PENDING_QA`
-- `carthage-destroyed`: `IMPLEMENTED_PENDING_QA`
-- `spartacus-revolt`: `IMPLEMENTED_PENDING_QA`
-- `rubicon`: `IMPLEMENTED_PENDING_QA`
-- `caesar-assassination`: `IMPLEMENTED_PENDING_QA`
-- `augustus-princeps`: `IMPLEMENTED_PENDING_QA`
-- `colosseum-opens`: `IMPLEMENTED_PENDING_QA`
-- `empire-maximum`: `IMPLEMENTED_PENDING_QA`
-- `marcus-aurelius`: `IMPLEMENTED_PENDING_QA`
-- `crisis-third-century`: `IMPLEMENTED_PENDING_QA`
-- `milvian-bridge`: `IMPLEMENTED_PENDING_QA`
-- `alaric-sacks-rome`: `IMPLEMENTED_PENDING_QA`
-- `fall-western-empire`: `IMPLEMENTED_PENDING_QA`
+- `v3` is the default runtime target.
+- `v2`/`v1` remain in-place as fallback while `v3` assets are generated and approved.

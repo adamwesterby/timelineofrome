@@ -1,6 +1,6 @@
 .button {
   position: fixed;
-  bottom: var(--spacing-xl);
+  bottom: calc(var(--spacing-xl) + 28px);
   right: var(--spacing-xl);
   width: 48px;
   height: 48px;

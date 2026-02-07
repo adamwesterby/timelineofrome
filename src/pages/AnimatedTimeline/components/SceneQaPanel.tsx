@@ -15,7 +15,7 @@ export const SCENE_QA_CHECK_ITEMS: Array<{ id: SceneQaCheckId; label: string }> 
   { id: 'recognizable', label: 'Subject is recognizable at first glance' },
   { id: 'historicalCue', label: 'Historical cue is clear and event-specific' },
   { id: 'textReadable', label: 'Headline/subtitle remain readable' },
-  { id: 'depth', label: 'Layering creates convincing depth' },
+  { id: 'depth', label: 'Image composition creates convincing depth' },
   { id: 'motion', label: 'Parallax/motion feels coherent' },
 ];
 
@@ -24,6 +24,7 @@ interface SceneQaPanelProps {
   currentIndex: number;
   sceneVersion: SceneAssetVersion;
   hasV2ForCurrentEvent: boolean;
+  hasV3ForCurrentEvent: boolean;
   isPlaying: boolean;
   checklist: SceneQaChecklist;
   onSelectEvent: (index: number) => void;
@@ -37,6 +38,7 @@ export function SceneQaPanel({
   currentIndex,
   sceneVersion,
   hasV2ForCurrentEvent,
+  hasV3ForCurrentEvent,
   isPlaying,
   checklist,
   onSelectEvent,
@@ -88,11 +90,21 @@ export function SceneQaPanel({
           >
             v2
           </button>
+          <button
+            type="button"
+            className={sceneVersion === 'v3' ? styles.toggleActive : styles.toggle}
+            onClick={() => onSceneVersionChange('v3')}
+          >
+            v3
+          </button>
         </div>
       </div>
 
       {sceneVersion === 'v2' && !hasV2ForCurrentEvent ? (
         <p className={styles.hint}>No v2 asset exists for this event yet, showing v1 fallback.</p>
+      ) : null}
+      {sceneVersion === 'v3' && !hasV3ForCurrentEvent ? (
+        <p className={styles.hint}>No v3 asset exists for this event yet, showing v2/v1 fallback.</p>
       ) : null}
 
       <div className={styles.row}>

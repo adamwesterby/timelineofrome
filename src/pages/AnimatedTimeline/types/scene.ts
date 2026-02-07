@@ -1,5 +1,6 @@
-export type SceneRenderMode = 'legacy-svg' | 'cinematic-hybrid';
-export type SceneAssetVersion = 'v1' | 'v2';
+export type SceneRenderMode = 'legacy-svg' | 'cinematic-hybrid' | 'single-image';
+export type SceneAssetVersion = 'v1' | 'v2' | 'v3';
+export type SceneVisualGrade = 'battle' | 'ceremony' | 'collapse' | 'map';
 
 export type SceneAccentPreset = 'embers' | 'dust' | 'laurel' | 'steel-glint' | 'none';
 
@@ -35,4 +36,11 @@ export interface CinematicSceneSpec extends BaseSceneSpec {
   camera: SceneCamera;
 }
 
-export type SceneSpec = LegacySceneSpec | CinematicSceneSpec;
+export interface SingleImageSceneSpec extends BaseSceneSpec {
+  renderMode: 'single-image';
+  src: string;
+  camera: SceneCamera;
+  grade?: SceneVisualGrade;
+}
+
+export type SceneSpec = LegacySceneSpec | CinematicSceneSpec | SingleImageSceneSpec;

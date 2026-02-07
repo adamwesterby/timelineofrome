@@ -3,6 +3,7 @@ import type { AnimatedEvent } from '../data/animatedEvents';
 import { getSceneSpec } from '../data/sceneSpecs';
 import { illustrations } from '../illustrations';
 import { CinematicScene } from './CinematicScene';
+import { SingleImageScene } from './SingleImageScene';
 import type { SceneAssetVersion } from '../types/scene';
 import styles from './AnimatedScene.module.css';
 
@@ -61,7 +62,14 @@ export function AnimatedScene({
       }}
     >
       <div className={styles.illustrationWrapper}>
-        {sceneSpec.renderMode === 'cinematic-hybrid' ? (
+        {sceneSpec.renderMode === 'single-image' ? (
+          <SingleImageScene
+            event={event}
+            spec={sceneSpec}
+            fallback={fallbackScene}
+            prefersReducedMotion={prefersReducedMotion}
+          />
+        ) : sceneSpec.renderMode === 'cinematic-hybrid' ? (
           <CinematicScene
             event={event}
             spec={sceneSpec}

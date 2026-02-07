@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { ANIMATED_EVENTS } from './data/animatedEvents';
-import { getSceneLayerSources, hasSceneVersion } from './data/sceneSpecs';
+import { getSceneAssetSources, hasSceneVersion } from './data/sceneSpecs';
 import { AnimatedScene } from './components/AnimatedScene';
 import { SceneOverlay } from './components/SceneOverlay';
 import { ProgressBar } from './components/ProgressBar';
@@ -25,7 +25,7 @@ const QA_STORAGE_EVENT_KEY = 'timeline.qa.eventId';
 const QA_STORAGE_CHECKLIST_KEY = 'timeline.qa.checklist';
 
 function parseSceneVersion(value: string | null): SceneAssetVersion | undefined {
-  if (value === 'v1' || value === 'v2') return value;
+  if (value === 'v1' || value === 'v2' || value === 'v3') return value;
   return undefined;
 }
 
@@ -50,7 +50,7 @@ export default function AnimatedTimelinePage() {
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isPlaying, setIsPlaying] = useState(!prefersReducedMotion);
   const [sceneVersion, setSceneVersion] = useState<SceneAssetVersion>(
-    () => (isQaMode ? queryVersion ?? 'v2' : 'v2')
+    () => (isQaMode ? queryVersion ?? 'v3' : 'v3')
   );
   const [resetKey, setResetKey] = useState(0);
   const [qaChecklistByScene, setQaChecklistByScene] = useState<Record<string, SceneQaChecklist>>(() => {
@@ -210,7 +210,7 @@ export default function AnimatedTimelinePage() {
     neighbors.forEach((index) => {
       const eventId = ANIMATED_EVENTS[index]?.id;
       if (!eventId) return;
-      getSceneLayerSources(eventId, { version: sceneVersion }).forEach((src) => sources.add(src));
+      getSceneAssetSources(eventId, { version: sceneVersion }).forEach((src) => sources.add(src));
     });
 
     sources.forEach((src) => {
@@ -249,6 +249,7 @@ export default function AnimatedTimelinePage() {
           currentIndex={currentIndex}
           sceneVersion={sceneVersion}
           hasV2ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v2')}
+          hasV3ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v3')}
           isPlaying={isPlaying}
           checklist={currentChecklist}
           onSelectEvent={goTo}
