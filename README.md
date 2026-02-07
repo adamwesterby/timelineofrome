@@ -46,3 +46,9 @@ base: '/'
 ```
 
 so it serves correctly from the custom domain root.
+
+## Social / LinkedIn
+
+- LinkedIn project thumbnail (landscape): `public/linkedin/linkedin-project-1200x627.png`
+- LinkedIn project thumbnail (square): `public/linkedin/linkedin-project-1080x1080.png`
+- Open Graph SVG source: `public/og-timeline-of-rome.svg`

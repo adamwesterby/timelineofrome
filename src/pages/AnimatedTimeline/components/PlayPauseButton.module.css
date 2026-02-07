@@ -1,0 +1,38 @@
+.button {
+  position: fixed;
+  bottom: var(--spacing-xl);
+  right: var(--spacing-xl);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(26, 16, 8, 0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(232, 201, 155, 0.3);
+  color: var(--pottery-cream, #E8C99B);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 25;
+  transition: background 150ms ease, transform 150ms ease;
+  padding: 0;
+}
+
+.button:hover {
+  background: rgba(26, 16, 8, 0.7);
+  transform: scale(1.1);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--pottery-cream, #E8C99B);
+  outline-offset: 3px;
+}
+
+@media (max-width: 768px) {
+  .button {
+    width: 40px;
+    height: 40px;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-md);
+  }
+}

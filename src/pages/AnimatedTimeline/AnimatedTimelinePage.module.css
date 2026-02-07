@@ -1,0 +1,15 @@
+.container {
+  position: relative;
+  width: 100%;
+  /* Use dvh with vh fallback for mobile browser chrome */
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--pottery-black, #1A1008);
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}

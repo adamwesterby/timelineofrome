@@ -1,0 +1,70 @@
+.contentContainer {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--spacing-lg);
+}
+
+.seoSection {
+  padding: var(--spacing-2xl) 0;
+}
+
+.seoSection h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  letter-spacing: 0.08em;
+  margin-bottom: var(--spacing-md);
+}
+
+.seoSection h3 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  margin: var(--spacing-lg) 0 var(--spacing-sm);
+}
+
+.seoSection p {
+  color: var(--color-ink-brown);
+}
+
+.instructions {
+  margin-left: var(--spacing-lg);
+  color: var(--color-ink-brown);
+}
+
+.instructions li {
+  margin-bottom: var(--spacing-xs);
+}
+
+.faqList {
+  display: grid;
+  gap: var(--spacing-md);
+}
+
+.faqList article {
+  border: 1px solid rgba(212, 196, 160, 0.9);
+  border-radius: var(--border-radius-md);
+  background: rgba(250, 243, 227, 0.75);
+  padding: var(--spacing-md);
+}
+
+.faqList h3 {
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .contentContainer {
+    padding: 0 var(--spacing-md);
+  }
+
+  .seoSection {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .seoSection h2 {
+    font-size: 1.25rem;
+  }
+
+  .seoSection h3 {
+    font-size: 1.05rem;
+  }
+}

@@ -46,6 +46,13 @@
   /* Layout */
   --max-width: 900px;
   --timeline-width: 4px;
+
+  /* Pottery palette (animated timeline) */
+  --pottery-black: #1A1008;
+  --pottery-terracotta: #C65D3E;
+  --pottery-red-light: #D4845A;
+  --pottery-cream: #E8C99B;
+  --pottery-gold-accent: #B8860B;
 }
 
 /* Reset and Base Styles */

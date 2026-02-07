@@ -1,0 +1,75 @@
+.viewToggle {
+  position: fixed;
+  top: var(--spacing-md);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  gap: 2px;
+  border-radius: var(--border-radius-md);
+  padding: 3px;
+}
+
+.toggleOption {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.35rem 1.1rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  font-weight: 500;
+}
+
+/* Light theme (main timeline page) */
+.light {
+  background: rgba(44, 24, 16, 0.08);
+  border: 1px solid var(--color-papyrus-aged);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.light .toggleOption {
+  color: var(--color-ink-faded);
+}
+
+.light .toggleOption:hover {
+  color: var(--color-ink-brown);
+}
+
+.light .toggleActive {
+  background: var(--color-papyrus-cream);
+  color: var(--color-ink-black);
+  box-shadow: var(--shadow-sm);
+}
+
+.light .toggleActive:hover {
+  color: var(--color-ink-black);
+}
+
+/* Dark theme (animated page) */
+.dark {
+  background: rgba(26, 16, 8, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(232, 201, 155, 0.2);
+}
+
+.dark .toggleOption {
+  color: rgba(232, 201, 155, 0.7);
+}
+
+.dark .toggleOption:hover {
+  color: rgba(232, 201, 155, 1);
+}
+
+.dark .toggleActive {
+  background: rgba(232, 201, 155, 0.15);
+  color: rgba(232, 201, 155, 1);
+  box-shadow: none;
+}
+
+.dark .toggleActive:hover {
+  color: rgba(232, 201, 155, 1);
+}
