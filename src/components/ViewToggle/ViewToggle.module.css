@@ -1,6 +1,6 @@
 .viewToggle {
   position: fixed;
-  top: var(--spacing-md);
+  top: calc(var(--safe-top) + var(--spacing-sm));
   left: 50%;
   transform: translateX(-50%);
   z-index: 30;
@@ -72,4 +72,11 @@
 
 .dark .toggleActive:hover {
   color: rgba(232, 201, 155, 1);
+}
+
+@media (max-width: 768px) {
+  .toggleOption {
+    letter-spacing: 0.08em;
+    padding: 0.32rem 0.95rem;
+  }
 }

@@ -46,6 +46,8 @@
   /* Layout */
   --max-width: 900px;
   --timeline-width: 4px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 
   /* Pottery palette (animated timeline) */
   --pottery-black: #1A1008;

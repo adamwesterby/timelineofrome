@@ -32,7 +32,14 @@
   .button {
     width: 40px;
     height: 40px;
-    bottom: var(--spacing-lg);
+    bottom: calc(var(--safe-bottom) + var(--spacing-2xl) + 24px);
+    right: var(--spacing-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .button {
+    bottom: calc(var(--safe-bottom) + var(--spacing-2xl) + 24px);
     right: var(--spacing-md);
   }
 }

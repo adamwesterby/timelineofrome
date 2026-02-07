@@ -1,6 +1,6 @@
 .progressBar {
   position: fixed;
-  bottom: 0;
+  bottom: calc(var(--safe-bottom) + var(--spacing-sm));
   left: 0;
   right: 0;
   display: flex;
@@ -101,17 +101,22 @@
 
 @media (max-width: 768px) {
   .progressBar {
+    bottom: calc(var(--safe-bottom) + var(--spacing-2xl));
     padding: var(--spacing-sm) var(--spacing-md);
   }
 
+  .track {
+    height: 3px;
+  }
+
   .dot {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   .dotActive {
-    width: 11px;
-    height: 11px;
+    width: 14px;
+    height: 14px;
   }
 }
 
@@ -121,6 +126,17 @@
   }
 
   .progressBar {
+    bottom: calc(var(--safe-bottom) + var(--spacing-2xl));
     padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .dot {
+    width: 9px;
+    height: 9px;
+  }
+
+  .dotActive {
+    width: 13px;
+    height: 13px;
   }
 }

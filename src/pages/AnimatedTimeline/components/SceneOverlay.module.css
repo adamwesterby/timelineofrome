@@ -40,8 +40,17 @@
 @media (max-width: 768px) {
   .overlay {
     left: var(--spacing-md);
-    bottom: 50px;
-    max-width: 320px;
+    bottom: calc(var(--safe-bottom) + var(--spacing-2xl) + 76px);
+    max-width: 360px;
+    padding: 0.75rem 0.875rem;
+    border-radius: 12px;
+    border: 1px solid rgba(232, 201, 155, 0.18);
+    background: linear-gradient(
+      180deg,
+      rgba(26, 16, 8, 0.58) 0%,
+      rgba(26, 16, 8, 0.32) 100%
+    );
+    backdrop-filter: blur(2px);
   }
 
   .title {
@@ -50,6 +59,7 @@
 
   .summary {
     font-size: 1rem;
+    line-height: 1.55;
   }
 }
 
@@ -57,20 +67,22 @@
   .overlay {
     left: var(--spacing-md);
     right: var(--spacing-md);
-    bottom: 45px;
+    bottom: calc(var(--safe-bottom) + var(--spacing-2xl) + 76px);
     max-width: none;
-    text-align: center;
+    text-align: left;
+    padding: 0.7rem 0.8rem;
   }
 
   .title {
-    font-size: 1.25rem;
+    font-size: 1.35rem;
   }
 
   .year {
-    font-size: 0.875rem;
+    font-size: 0.95rem;
   }
 
   .summary {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    line-height: 1.55;
   }
 }
