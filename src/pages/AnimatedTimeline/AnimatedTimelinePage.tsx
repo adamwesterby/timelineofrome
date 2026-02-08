@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { ANIMATED_EVENTS } from './data/animatedEvents';
 import { getSceneAssetSources, hasSceneVersion } from './data/sceneSpecs';
@@ -49,6 +49,8 @@ export default function AnimatedTimelinePage() {
   const [direction, setDirection] = useState(1);
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isPlaying, setIsPlaying] = useState(!prefersReducedMotion);
+  const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
+  const wasPlayingBeforeDetailsRef = useRef(false);
   const [sceneVersion, setSceneVersion] = useState<SceneAssetVersion>(
     () => (isQaMode ? queryVersion ?? 'v3' : 'v3')
   );
@@ -165,8 +167,26 @@ export default function AnimatedTimelinePage() {
   }, [currentIndex, total, goTo]);
 
   const onTogglePlay = useCallback(() => {
+    if (isDetailsExpanded) return;
     setIsPlaying((playing) => !playing);
-  }, []);
+  }, [isDetailsExpanded]);
+
+  const onToggleExpanded = useCallback(() => {
+    if (isDetailsExpanded) {
+      setIsDetailsExpanded(false);
+      if (wasPlayingBeforeDetailsRef.current) {
+        setIsPlaying(true);
+      }
+      wasPlayingBeforeDetailsRef.current = false;
+      return;
+    }
+
+    wasPlayingBeforeDetailsRef.current = isPlaying;
+    setIsDetailsExpanded(true);
+    if (isPlaying) {
+      setIsPlaying(false);
+    }
+  }, [isDetailsExpanded, isPlaying]);
 
   const onChangeSceneVersion = useCallback((version: SceneAssetVersion) => {
     setSceneVersion(version);
@@ -190,13 +210,19 @@ export default function AnimatedTimelinePage() {
   );
 
   useKeyboardNavigation({ onNext, onPrev, onTogglePlay });
-  useSwipeNavigation({ onNext, onPrev });
+  useSwipeNavigation({ onNext, onPrev, enabled: !isDetailsExpanded });
   useAutoPlay({ isPlaying, onNext, resetKey });
 
   // Reduced motion: disable auto-play when preference changes
   useEffect(() => {
     if (prefersReducedMotion) setIsPlaying(false);
   }, [prefersReducedMotion]);
+
+  // Collapse details when changing events.
+  useEffect(() => {
+    setIsDetailsExpanded(false);
+    wasPlayingBeforeDetailsRef.current = false;
+  }, [currentEvent.id]);
 
   // Warm-cache adjacent scene layers to reduce transition hitching.
   useEffect(() => {
@@ -234,7 +260,12 @@ export default function AnimatedTimelinePage() {
         </AnimatePresence>
 
         <AnimatePresence mode="wait">
-          <SceneOverlay key={`overlay-${currentEvent.id}`} event={currentEvent} />
+          <SceneOverlay
+            key={`overlay-${currentEvent.id}`}
+            event={currentEvent}
+            isExpanded={isDetailsExpanded}
+            onToggleExpanded={onToggleExpanded}
+          />
         </AnimatePresence>
       </div>
 

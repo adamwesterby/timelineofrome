@@ -13,6 +13,13 @@ export function useKeyboardNavigation({
 }: UseKeyboardNavigationProps) {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (target) {
+        const isInteractiveTarget = target.isContentEditable
+          || ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON', 'A'].includes(target.tagName);
+        if (isInteractiveTarget) return;
+      }
+
       switch (e.key) {
         case 'ArrowRight':
         case 'ArrowDown':

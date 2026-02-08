@@ -3,12 +3,18 @@ import { useEffect, useRef } from 'react';
 interface UseSwipeNavigationProps {
   onNext: () => void;
   onPrev: () => void;
+  enabled?: boolean;
 }
 
-export function useSwipeNavigation({ onNext, onPrev }: UseSwipeNavigationProps) {
+export function useSwipeNavigation({ onNext, onPrev, enabled = true }: UseSwipeNavigationProps) {
   const touchStart = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
+    if (!enabled) {
+      touchStart.current = null;
+      return;
+    }
+
     const handleTouchStart = (e: TouchEvent) => {
       const touch = e.touches[0];
       touchStart.current = { x: touch.clientX, y: touch.clientY };
@@ -40,5 +46,5 @@ export function useSwipeNavigation({ onNext, onPrev }: UseSwipeNavigationProps) 
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [onNext, onPrev]);
+  }, [enabled, onNext, onPrev]);
 }
