@@ -1,9 +1,5 @@
 import type { EraType, SignificanceType } from '../types';
 
-const GTM_CONTAINER_ID = 'GTM-567JLFPT' as const;
-const GTM_SCRIPT_ID = 'gtm-script';
-const GTM_SCRIPT_SRC = `https://www.googletagmanager.com/gtm.js?id=${GTM_CONTAINER_ID}`;
-
 export type ViewMode = 'animated' | 'timeline';
 
 interface AnalyticsEventPayloadMap {
@@ -39,23 +35,6 @@ let lastTrackedPagePath: string | null = null;
 function getDataLayer() {
   window.dataLayer = window.dataLayer || [];
   return window.dataLayer;
-}
-
-export function initializeAnalytics() {
-  if (document.getElementById(GTM_SCRIPT_ID)) {
-    return;
-  }
-
-  getDataLayer().push({
-    event: 'gtm.js',
-    'gtm.start': Date.now(),
-  });
-
-  const script = document.createElement('script');
-  script.id = GTM_SCRIPT_ID;
-  script.async = true;
-  script.src = GTM_SCRIPT_SRC;
-  document.head.appendChild(script);
 }
 
 export function trackAnalyticsEvent<K extends AnalyticsEventName>(

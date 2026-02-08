@@ -38,6 +38,7 @@ npm run preview
 ## Analytics (GA4 + GTM)
 
 This app uses Google Tag Manager only (no direct `gtag.js` snippet) and keeps Cloudflare Web Analytics enabled.
+The official GTM `<head>` + `<noscript>` snippets live in `index.html`.
 
 - GTM container ID: `GTM-567JLFPT`
 - GA4 measurement ID: `G-DDY0T69X7H`
