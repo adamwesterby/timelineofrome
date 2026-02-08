@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/Layout/Layout';
 import TimelinePage from './pages/TimelinePage/TimelinePage';
 
@@ -9,7 +9,8 @@ function App() {
   return (
     <Routes>
       <Route element={<Layout />}>
-        <Route index element={<TimelinePage />} />
+        <Route index element={<Navigate to="/animated" replace />} />
+        <Route path="timeline" element={<TimelinePage />} />
         <Route
           path="animated"
           element={

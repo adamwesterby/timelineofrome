@@ -48,7 +48,8 @@ export default function AnimatedTimelinePage() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [isPlaying, setIsPlaying] = useState(!prefersReducedMotion);
+  const [hasStarted, setHasStarted] = useState(() => isQaMode);
+  const [isPlaying, setIsPlaying] = useState(() => (isQaMode ? !prefersReducedMotion : false));
   const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
   const wasPlayingBeforeDetailsRef = useRef(false);
   const [sceneVersion, setSceneVersion] = useState<SceneAssetVersion>(
@@ -145,6 +146,7 @@ export default function AnimatedTimelinePage() {
   );
 
   const onNext = useCallback(() => {
+    if (!hasStarted) return;
     if (currentIndex < total - 1) {
       goTo(currentIndex + 1);
     } else {
@@ -153,9 +155,10 @@ export default function AnimatedTimelinePage() {
       setCurrentIndex(0);
       setResetKey((k) => k + 1);
     }
-  }, [currentIndex, total, goTo]);
+  }, [currentIndex, goTo, hasStarted, total]);
 
   const onPrev = useCallback(() => {
+    if (!hasStarted) return;
     if (currentIndex > 0) {
       goTo(currentIndex - 1);
     } else {
@@ -164,12 +167,18 @@ export default function AnimatedTimelinePage() {
       setCurrentIndex(total - 1);
       setResetKey((k) => k + 1);
     }
-  }, [currentIndex, total, goTo]);
+  }, [currentIndex, goTo, hasStarted, total]);
 
   const onTogglePlay = useCallback(() => {
+    if (!hasStarted) return;
     if (isDetailsExpanded) return;
     setIsPlaying((playing) => !playing);
-  }, [isDetailsExpanded]);
+  }, [hasStarted, isDetailsExpanded]);
+
+  const onStartExperience = useCallback(() => {
+    setHasStarted(true);
+    setIsPlaying(!prefersReducedMotion);
+  }, [prefersReducedMotion]);
 
   const onToggleExpanded = useCallback(() => {
     if (isDetailsExpanded) {
@@ -210,7 +219,7 @@ export default function AnimatedTimelinePage() {
   );
 
   useKeyboardNavigation({ onNext, onPrev, onTogglePlay });
-  useSwipeNavigation({ onNext, onPrev, enabled: !isDetailsExpanded });
+  useSwipeNavigation({ onNext, onPrev, enabled: hasStarted && !isDetailsExpanded });
   useAutoPlay({ isPlaying, onNext, resetKey });
 
   // Reduced motion: disable auto-play when preference changes
@@ -226,6 +235,8 @@ export default function AnimatedTimelinePage() {
 
   // Warm-cache adjacent scene layers to reduce transition hitching.
   useEffect(() => {
+    if (!hasStarted) return;
+
     const neighbors = [
       currentIndex,
       (currentIndex + 1) % total,
@@ -244,54 +255,78 @@ export default function AnimatedTimelinePage() {
       img.decoding = 'async';
       img.src = src;
     });
-  }, [currentIndex, sceneVersion, total]);
+  }, [currentIndex, hasStarted, sceneVersion, total]);
 
   return (
     <div className={styles.container}>
-      <div className={styles.viewport}>
-        <AnimatePresence mode="wait" custom={direction}>
-          <AnimatedScene
-            key={`${currentEvent.id}-${sceneVersion}`}
-            event={currentEvent}
-            direction={direction}
-            prefersReducedMotion={prefersReducedMotion}
-            sceneVersion={sceneVersion}
-          />
-        </AnimatePresence>
+      {hasStarted ? (
+        <>
+          <div className={styles.viewport}>
+            <AnimatePresence mode="wait" custom={direction}>
+              <AnimatedScene
+                key={`${currentEvent.id}-${sceneVersion}`}
+                event={currentEvent}
+                direction={direction}
+                prefersReducedMotion={prefersReducedMotion}
+                sceneVersion={sceneVersion}
+              />
+            </AnimatePresence>
 
-        <AnimatePresence mode="wait">
-          <SceneOverlay
-            key={`overlay-${currentEvent.id}`}
-            event={currentEvent}
-            isExpanded={isDetailsExpanded}
-            onToggleExpanded={onToggleExpanded}
-          />
-        </AnimatePresence>
-      </div>
+            <AnimatePresence mode="wait">
+              <SceneOverlay
+                key={`overlay-${currentEvent.id}`}
+                event={currentEvent}
+                isExpanded={isDetailsExpanded}
+                onToggleExpanded={onToggleExpanded}
+              />
+            </AnimatePresence>
+          </div>
 
-      {/* Accessible live region for screen readers */}
-      <div className="visually-hidden" aria-live="polite" aria-atomic="true">
-        {currentEvent.yearDisplay}: {currentEvent.title} - {currentEvent.summary}
-      </div>
+          {/* Accessible live region for screen readers */}
+          <div className="visually-hidden" aria-live="polite" aria-atomic="true">
+            {currentEvent.yearDisplay}: {currentEvent.title} - {currentEvent.summary}
+          </div>
 
-      {isQaMode ? (
-        <SceneQaPanel
-          events={ANIMATED_EVENTS}
-          currentIndex={currentIndex}
-          sceneVersion={sceneVersion}
-          hasV2ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v2')}
-          hasV3ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v3')}
-          isPlaying={isPlaying}
-          checklist={currentChecklist}
-          onSelectEvent={goTo}
-          onSceneVersionChange={onChangeSceneVersion}
-          onTogglePlay={onTogglePlay}
-          onChecklistChange={onChecklistChange}
-        />
-      ) : null}
+          {isQaMode ? (
+            <SceneQaPanel
+              events={ANIMATED_EVENTS}
+              currentIndex={currentIndex}
+              sceneVersion={sceneVersion}
+              hasV2ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v2')}
+              hasV3ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v3')}
+              isPlaying={isPlaying}
+              checklist={currentChecklist}
+              onSelectEvent={goTo}
+              onSceneVersionChange={onChangeSceneVersion}
+              onTogglePlay={onTogglePlay}
+              onChecklistChange={onChecklistChange}
+            />
+          ) : null}
 
-      <ProgressBar currentIndex={currentIndex} onNavigate={goTo} />
-      <PlayPauseButton isPlaying={isPlaying} onToggle={onTogglePlay} />
+          <ProgressBar currentIndex={currentIndex} onNavigate={goTo} />
+          <PlayPauseButton isPlaying={isPlaying} onToggle={onTogglePlay} />
+        </>
+      ) : (
+        <section className={styles.intro} aria-labelledby="animated-intro-title">
+          <div className={styles.introCard}>
+            <p className={styles.introLabel}>Animated Experience</p>
+            <h1 className={styles.introTitle} id="animated-intro-title">
+              Timeline of Rome
+            </h1>
+            <p className={styles.introRange}>753 BC to 476 AD</p>
+            <p className={styles.introText}>
+              Step through Roman history with illustrated scenes that highlight major turning points from the
+              city&apos;s founding to the fall of the Western Empire.
+            </p>
+            <p className={styles.introTextMuted}>
+              You can switch to a more detailed timeline view at any time using the toggle above.
+            </p>
+            <button className={styles.introButton} type="button" onClick={onStartExperience}>
+              Continue
+            </button>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

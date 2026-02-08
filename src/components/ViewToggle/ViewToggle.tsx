@@ -7,7 +7,7 @@ interface ViewToggleProps {
 
 export function ViewToggle({ theme = 'light' }: ViewToggleProps) {
   const location = useLocation();
-  const isAnimated = location.pathname === '/animated';
+  const isAnimated = location.pathname.startsWith('/animated');
 
   return (
     <nav
@@ -15,16 +15,16 @@ export function ViewToggle({ theme = 'light' }: ViewToggleProps) {
       aria-label="View mode"
     >
       <Link
-        to="/"
-        className={`${styles.toggleOption} ${!isAnimated ? styles.toggleActive : ''}`}
-      >
-        Timeline
-      </Link>
-      <Link
         to="/animated"
         className={`${styles.toggleOption} ${isAnimated ? styles.toggleActive : ''}`}
       >
         Animated
+      </Link>
+      <Link
+        to="/timeline"
+        className={`${styles.toggleOption} ${!isAnimated ? styles.toggleActive : ''}`}
+      >
+        Timeline
       </Link>
     </nav>
   );

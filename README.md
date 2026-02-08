@@ -35,6 +35,12 @@ Preview the production build locally:
 npm run preview
 ```
 
+## Routes
+
+- `/` redirects to `/animated` (default animated experience).
+- `/animated` is the animated timeline view.
+- `/timeline` is the detailed scroll-based timeline view.
+
 ## Deploy
 
 This repo includes a GitHub Actions workflow at `.github/workflows/deploy.yml` that builds and deploys the app to GitHub Pages on pushes to `main`.
