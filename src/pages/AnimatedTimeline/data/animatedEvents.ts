@@ -1,6 +1,5 @@
 import type { EraType } from '../../../types';
-import type { TimelineEvent } from '../../../types';
-import eventsData from '../../../data/events.json';
+import { ANIMATED_EVENT_DESCRIPTIONS } from './animatedEventDescriptions';
 
 export interface AnimatedEvent {
   id: string;
@@ -11,14 +10,6 @@ export interface AnimatedEvent {
   description: string;
   era: EraType;
 }
-
-const eventDescriptionById = (eventsData.events as TimelineEvent[]).reduce<Record<string, string>>(
-  (acc, event) => {
-    acc[event.id] = event.description;
-    return acc;
-  },
-  {}
-);
 
 const baseAnimatedEvents: Omit<AnimatedEvent, 'description'>[] = [
   // Kingdom (2)
@@ -172,7 +163,9 @@ const baseAnimatedEvents: Omit<AnimatedEvent, 'description'>[] = [
 
 export const ANIMATED_EVENTS: AnimatedEvent[] = baseAnimatedEvents.map((event) => ({
   ...event,
-  description: eventDescriptionById[event.id] ?? event.summary,
+  description:
+    ANIMATED_EVENT_DESCRIPTIONS[event.id as keyof typeof ANIMATED_EVENT_DESCRIPTIONS] ??
+    event.summary,
 }));
 
 export const ERA_COLORS: Record<EraType, string> = {

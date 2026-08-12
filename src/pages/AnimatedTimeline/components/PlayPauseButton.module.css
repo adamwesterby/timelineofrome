@@ -28,10 +28,20 @@
   outline-offset: 3px;
 }
 
+.button[aria-disabled='true'] {
+  cursor: default;
+  opacity: 0.62;
+}
+
+.button[aria-disabled='true']:hover {
+  background: rgba(26, 16, 8, 0.5);
+  transform: none;
+}
+
 @media (max-width: 768px) {
   .button {
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     bottom: calc(var(--safe-bottom) + var(--spacing-2xl) + 24px);
     right: var(--spacing-md);
   }

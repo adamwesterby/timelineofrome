@@ -1,13 +1,16 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import styles from './Header.module.css';
 
 export function Header() {
+  const prefersReducedMotion = useReducedMotion();
+  const enterFrom = (offset: number) => (prefersReducedMotion ? false : { opacity: 0, x: offset });
+
   return (
     <header className={styles.header}>
       <div className={styles.container}>
         <motion.div
           className={styles.laurelLeft}
-          initial={{ opacity: 0, x: -20 }}
+          initial={enterFrom(-20)}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           aria-hidden="true"
@@ -16,18 +19,9 @@ export function Header() {
         </motion.div>
 
         <div className={styles.titleBlock}>
-          <motion.p
-            className={styles.preTitle}
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            A Visual Journey Through
-          </motion.p>
-
           <motion.h1
             className={styles.title}
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.1 }}
           >
@@ -36,7 +30,7 @@ export function Header() {
 
           <motion.p
             className={styles.subtitle}
-            initial={{ opacity: 0, y: 10 }}
+            initial={prefersReducedMotion ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
@@ -45,7 +39,7 @@ export function Header() {
 
           <motion.p
             className={styles.tagline}
-            initial={{ opacity: 0 }}
+            initial={prefersReducedMotion ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.5 }}
           >
@@ -55,7 +49,7 @@ export function Header() {
 
         <motion.div
           className={styles.laurelRight}
-          initial={{ opacity: 0, x: 20 }}
+          initial={enterFrom(20)}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
           aria-hidden="true"
@@ -66,7 +60,7 @@ export function Header() {
 
       <motion.div
         className={styles.divider}
-        initial={{ scaleX: 0 }}
+        initial={prefersReducedMotion ? false : { scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 1, delay: 0.6 }}
       />

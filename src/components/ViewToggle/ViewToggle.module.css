@@ -11,6 +11,10 @@
 }
 
 .toggleOption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
   font-family: var(--font-heading);
   font-size: 0.8rem;
   letter-spacing: 0.1em;
@@ -18,7 +22,10 @@
   padding: 0.35rem 1.1rem;
   border-radius: 6px;
   text-decoration: none;
-  transition: all var(--transition-fast);
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast);
   font-weight: 500;
 }
 
@@ -77,6 +84,6 @@
 @media (max-width: 768px) {
   .toggleOption {
     letter-spacing: 0.08em;
-    padding: 0.32rem 0.95rem;
+    padding: 0.5rem 0.95rem;
   }
 }

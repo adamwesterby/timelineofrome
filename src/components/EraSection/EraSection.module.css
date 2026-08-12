@@ -1,102 +1,87 @@
 .section {
-  padding: var(--spacing-2xl) 0 var(--spacing-3xl);
   position: relative;
+  padding: clamp(5rem, 9vw, 8rem) 0 clamp(6rem, 10vw, 9rem);
+  scroll-margin-top: 5rem;
 }
 
-/* Era-specific background colors */
+.section + .section {
+  border-top: 1px solid var(--color-rule);
+}
+
 .kingdom {
-  background: linear-gradient(
-    180deg,
-    var(--color-papyrus-light) 0%,
-    rgba(184, 134, 11, 0.05) 50%,
-    var(--color-papyrus-light) 100%
-  );
+  background: radial-gradient(circle at 14% 8%, rgba(184, 134, 11, 0.09), transparent 26rem);
 }
 
 .republic {
-  background: linear-gradient(
-    180deg,
-    var(--color-papyrus-light) 0%,
-    rgba(139, 37, 0, 0.04) 50%,
-    var(--color-papyrus-light) 100%
-  );
+  background: radial-gradient(circle at 86% 10%, rgba(143, 47, 25, 0.08), transparent 28rem);
 }
 
 .empire {
-  background: linear-gradient(
-    180deg,
-    var(--color-papyrus-light) 0%,
-    rgba(92, 61, 46, 0.05) 50%,
-    var(--color-papyrus-light) 100%
-  );
+  background: radial-gradient(circle at 12% 15%, rgba(92, 61, 46, 0.08), transparent 28rem);
 }
 
 .header {
-  text-align: center;
-  max-width: var(--max-width);
-  margin: 0 auto var(--spacing-2xl);
+  max-width: 760px;
+  margin: 0 auto clamp(4rem, 7vw, 6rem);
   padding: 0 var(--spacing-lg);
+  text-align: center;
 }
 
 .headerDecoration {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
 }
 
 .decorLine {
   display: block;
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-accent-gold) 100%
-  );
+  width: 5rem;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent-gold));
 }
 
 .decorLine:last-child {
-  background: linear-gradient(
-    90deg,
-    var(--color-accent-gold) 0%,
-    transparent 100%
-  );
+  background: linear-gradient(90deg, var(--color-accent-gold), transparent);
 }
 
 .icon {
-  width: 40px;
-  height: 40px;
-  color: var(--color-accent-gold);
+  width: 46px;
+  height: 46px;
+  color: var(--color-accent-gold-text);
 }
 
 .title {
-  font-family: var(--font-heading-decorative);
-  font-size: 2.25rem;
-  font-weight: 700;
+  max-width: 18ch;
+  margin: 0 auto var(--spacing-md);
   color: var(--color-ink-black);
-  letter-spacing: 0.15em;
+  font-family: var(--font-heading-decorative);
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: 0.055em;
+  text-wrap: balance;
   text-transform: uppercase;
-  margin: 0 0 var(--spacing-sm);
 }
 
 .years {
+  margin: 0 0 var(--spacing-lg);
+  color: var(--color-accent-gold-text);
   font-family: var(--font-heading);
-  font-size: 1.125rem;
-  color: var(--color-accent-gold);
-  letter-spacing: 0.2em;
-  margin: 0 0 var(--spacing-md);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.19em;
 }
 
 .description {
-  font-family: var(--font-body);
-  font-size: 1.125rem;
-  color: var(--color-ink-brown);
-  max-width: 600px;
+  max-width: 62ch;
   margin: 0 auto;
-  line-height: 1.7;
+  color: var(--color-ink-brown);
+  font-family: var(--font-body);
+  font-size: clamp(1.1rem, 2vw, 1.28rem);
   font-style: italic;
+  line-height: 1.72;
 }
 
 .timeline {
@@ -108,58 +93,61 @@
 
 .timelineLine {
   position: absolute;
-  left: 50%;
   top: 0;
   bottom: 0;
-  width: var(--timeline-width);
+  left: 50%;
+  width: 2px;
   background: linear-gradient(
     180deg,
     transparent 0%,
-    var(--color-papyrus-aged) 5%,
-    var(--color-papyrus-aged) 95%,
+    var(--color-papyrus-aged) 3%,
+    var(--color-ink-faded) 50%,
+    var(--color-papyrus-aged) 97%,
     transparent 100%
   );
   transform: translateX(-50%);
+  opacity: 0.72;
 }
 
 .events {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: clamp(2rem, 4vw, 3.25rem);
 }
 
 @media (max-width: 768px) {
   .section {
-    padding: var(--spacing-xl) 0 var(--spacing-2xl);
+    padding: 4.5rem 0 5.5rem;
+    scroll-margin-top: 4.5rem;
   }
 
   .header {
-    margin-bottom: var(--spacing-xl);
-    padding: 0 var(--spacing-md);
+    margin-bottom: 3.5rem;
+    padding: 0 var(--spacing-lg);
   }
 
   .decorLine {
-    width: 40px;
+    width: 3.25rem;
   }
 
   .icon {
-    width: 32px;
-    height: 32px;
+    width: 38px;
+    height: 38px;
   }
 
   .title {
-    font-size: 1.75rem;
-    letter-spacing: 0.1em;
+    font-size: clamp(2.05rem, 10vw, 3rem);
+    letter-spacing: 0.04em;
   }
 
   .years {
-    font-size: 1rem;
-    letter-spacing: 0.15em;
+    font-size: 0.92rem;
+    letter-spacing: 0.13em;
   }
 
   .description {
-    font-size: 1rem;
+    font-size: 1.08rem;
   }
 
   .timeline {
@@ -167,11 +155,11 @@
   }
 
   .timelineLine {
-    left: 20px;
+    left: 27px;
     transform: none;
   }
 
   .events {
-    gap: var(--spacing-lg);
+    gap: var(--spacing-xl);
   }
 }

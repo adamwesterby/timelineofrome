@@ -1,9 +1,10 @@
 .detail {
   overflow: hidden;
+  background: rgba(230, 206, 162, 0.24);
 }
 
 .content {
-  padding: 0 var(--spacing-md) var(--spacing-md);
+  padding: 0 1.35rem 1.35rem;
 }
 
 .divider {
@@ -11,29 +12,18 @@
   height: 1px;
   background: linear-gradient(
     90deg,
-    transparent 0%,
-    var(--color-papyrus-aged) 20%,
-    var(--color-papyrus-aged) 80%,
+    var(--color-accent-red) 0%,
+    var(--color-papyrus-aged) 42%,
     transparent 100%
   );
-  margin-bottom: var(--spacing-md);
-}
-
-.summary {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--color-ink-brown);
-  line-height: 1.6;
-  margin: 0 0 var(--spacing-md);
-  font-style: italic;
+  margin-bottom: var(--spacing-lg);
 }
 
 .description {
   font-family: var(--font-body);
-  font-size: 0.95rem;
+  font-size: 1.02rem;
   color: var(--color-ink-black);
-  line-height: 1.75;
+  line-height: 1.72;
   margin: 0;
 }
 
@@ -51,14 +41,10 @@
 
 @media (max-width: 768px) {
   .content {
-    padding: 0 var(--spacing-sm) var(--spacing-sm);
-  }
-
-  .summary {
-    font-size: 0.95rem;
+    padding: 0 1rem 1rem;
   }
 
   .description {
-    font-size: 0.9rem;
+    font-size: 0.98rem;
   }
 }

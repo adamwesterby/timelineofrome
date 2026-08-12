@@ -1,1 +1,95 @@
-/* Styles moved to Layout.module.css and TimelinePage.module.css */
+.loadingPage,
+.notFound {
+  display: grid;
+  min-height: 100vh;
+  min-height: 100dvh;
+  place-items: center;
+  padding: var(--spacing-xl);
+  color: var(--color-papyrus-cream);
+  background:
+    radial-gradient(circle at 50% 24%, rgba(184, 134, 11, 0.18), transparent 24rem),
+    var(--color-surface-ink);
+}
+
+.loadingPage span {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.notFoundPanel {
+  width: min(620px, 100%);
+  padding: clamp(2rem, 7vw, 4.5rem);
+  text-align: center;
+  border: 1px solid rgba(212, 168, 75, 0.5);
+  border-radius: 14px;
+  background: rgba(36, 19, 13, 0.62);
+  box-shadow: var(--shadow-lg);
+}
+
+.notFound h1 {
+  margin: 0 0 var(--spacing-lg);
+  color: var(--color-papyrus-cream);
+  font-family: var(--font-heading-decorative);
+  font-size: clamp(2.3rem, 8vw, 4.6rem);
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  text-wrap: balance;
+}
+
+.notFoundPanel > p {
+  max-width: 40ch;
+  margin: 0 auto;
+  color: rgba(251, 244, 229, 0.8);
+  font-size: 1.12rem;
+}
+
+.notFoundActions {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--spacing-2xl);
+  flex-wrap: wrap;
+}
+
+.primaryLink,
+.secondaryLink {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0.7rem 1rem;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-surface-ink);
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  border-radius: var(--border-radius-sm);
+  background: var(--color-papyrus-cream);
+}
+
+.secondaryLink {
+  color: var(--color-papyrus-cream);
+  background: transparent;
+  border: 1px solid rgba(251, 244, 229, 0.5);
+}
+
+.primaryLink:hover {
+  color: var(--color-surface-ink);
+  background: #fffaf0;
+}
+
+.secondaryLink:hover {
+  color: var(--color-papyrus-cream);
+  border-color: var(--color-accent-gold-light);
+}
+
+@media (max-width: 520px) {
+  .notFoundActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

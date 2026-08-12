@@ -1,16 +1,23 @@
 /* CSS Custom Properties - Papyrus/Ink Theme */
 :root {
   /* Colors */
-  --color-papyrus-light: #f5e6c8;
-  --color-papyrus-dark: #e8d4a8;
-  --color-papyrus-aged: #d4c4a0;
-  --color-papyrus-cream: #faf3e3;
-  --color-ink-black: #2c1810;
+  --color-papyrus-light: #f3e5c9;
+  --color-papyrus-dark: #e6cea2;
+  --color-papyrus-aged: #c9aa72;
+  --color-papyrus-cream: #fbf4e5;
+  --color-ink-black: #24130d;
   --color-ink-brown: #5c3d2e;
-  --color-ink-faded: #8b6b4a;
-  --color-accent-red: #8b2500;
+  --color-ink-faded: #70492f;
+  --color-ink-muted: #70492f;
+  --color-accent-red: #8f2f19;
+  --color-accent-red-dark: #6f1e0d;
   --color-accent-gold: #b8860b;
   --color-accent-gold-light: #d4a84b;
+  --color-accent-gold-text: #74431f;
+  --color-focus: #6f1e00;
+  --color-surface-raised: #fff9ec;
+  --color-surface-ink: #21120d;
+  --color-rule: rgba(92, 61, 46, 0.25);
 
   /* Typography */
   --font-heading: 'Cinzel', serif;
@@ -27,11 +34,11 @@
   --spacing-3xl: 4rem;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(44, 24, 16, 0.12);
-  --shadow-md: 0 4px 6px rgba(44, 24, 16, 0.1), 0 2px 4px rgba(44, 24, 16, 0.06);
-  --shadow-lg: 0 10px 15px rgba(44, 24, 16, 0.1), 0 4px 6px rgba(44, 24, 16, 0.05);
-  --shadow-card: 0 2px 8px rgba(92, 61, 46, 0.15), 0 1px 3px rgba(44, 24, 16, 0.1);
-  --shadow-card-hover: 0 8px 25px rgba(92, 61, 46, 0.2), 0 4px 10px rgba(44, 24, 16, 0.1);
+  --shadow-sm: 0 2px 5px rgba(44, 24, 16, 0.12);
+  --shadow-md: 0 8px 22px rgba(44, 24, 16, 0.14);
+  --shadow-lg: 0 22px 55px rgba(24, 12, 7, 0.2);
+  --shadow-card: 0 10px 26px rgba(44, 24, 16, 0.13);
+  --shadow-card-hover: 0 18px 40px rgba(44, 24, 16, 0.19);
 
   /* Borders */
   --border-radius-sm: 4px;
@@ -44,7 +51,8 @@
   --transition-slow: 400ms ease;
 
   /* Layout */
-  --max-width: 900px;
+  --max-width: 1080px;
+  --reading-width: 720px;
   --timeline-width: 4px;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -69,6 +77,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  scroll-padding-top: 7rem;
 }
 
 body {
@@ -81,28 +90,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Subtle paper texture */
   background-image:
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(212, 196, 160, 0.03) 2px,
-      rgba(212, 196, 160, 0.03) 4px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(212, 196, 160, 0.03) 2px,
-      rgba(212, 196, 160, 0.03) 4px
-    ),
+    radial-gradient(circle at 10% 5%, rgba(184, 134, 11, 0.09), transparent 26rem),
+    radial-gradient(circle at 88% 28%, rgba(143, 47, 25, 0.06), transparent 34rem),
     linear-gradient(
       180deg,
-      var(--color-papyrus-light) 0%,
-      var(--color-papyrus-cream) 50%,
-      var(--color-papyrus-light) 100%
+      var(--color-papyrus-cream) 0%,
+      var(--color-papyrus-light) 55%,
+      #efe0c2 100%
     );
+  background-attachment: fixed;
 }
 
 #root {
@@ -118,13 +115,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: 2.5rem;
-  letter-spacing: 0.15em;
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  letter-spacing: 0.09em;
 }
 
 h2 {
-  font-size: 1.875rem;
-  letter-spacing: 0.1em;
+  font-size: clamp(1.65rem, 3vw, 2.5rem);
+  letter-spacing: 0.06em;
 }
 
 h3 {
@@ -151,7 +148,7 @@ a {
 }
 
 a:hover {
-  color: var(--color-ink-brown);
+  color: var(--color-accent-red-dark);
 }
 
 img {
@@ -213,19 +210,15 @@ button {
 
 /* Focus Styles */
 :focus-visible {
-  outline: 2px solid var(--color-accent-gold);
-  outline-offset: 2px;
+  outline: 3px solid var(--color-focus);
+  outline-offset: 3px;
 }
 
 /* Responsive Typography */
 @media (max-width: 768px) {
-  html {
-    font-size: 15px;
-  }
-
   h1 {
-    font-size: 2rem;
-    letter-spacing: 0.1em;
+    font-size: clamp(2rem, 11vw, 3.15rem);
+    letter-spacing: 0.06em;
   }
 
   h2 {
@@ -238,11 +231,13 @@ button {
 }
 
 @media (max-width: 480px) {
-  html {
-    font-size: 14px;
-  }
-
   h1 {
-    font-size: 1.75rem;
+    font-size: clamp(1.9rem, 10vw, 2.65rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }

@@ -10,6 +10,9 @@ export function Layout() {
 
   return (
     <div className={styles.app}>
+      <a className={styles.skipLink} href="#main-content">
+        Skip to main content
+      </a>
       <ViewToggle theme={isAnimated ? 'dark' : 'light'} />
       {!isAnimated && <Header />}
       <Outlet />

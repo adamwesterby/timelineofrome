@@ -1,5 +1,5 @@
-import { useState, useEffect, type MouseEvent } from 'react';
-import { motion } from 'framer-motion';
+import { type MouseEvent } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import { trackAnalyticsEvent } from '../../lib/analytics';
 import { ERAS, type EraType } from '../../types';
 import styles from './Navigation.module.css';
@@ -9,16 +9,7 @@ interface NavigationProps {
 }
 
 export function Navigation({ currentEra }: NavigationProps) {
-  const [isSticky, setIsSticky] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsSticky(window.scrollY > 200);
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const prefersReducedMotion = useReducedMotion();
 
   const scrollToEra = (event: MouseEvent<HTMLAnchorElement>, eraId: EraType) => {
     event.preventDefault();
@@ -36,17 +27,14 @@ export function Navigation({ currentEra }: NavigationProps) {
       window.history.pushState(null, '', `#era-${eraId}`);
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth',
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
       });
     }
   };
 
   return (
-    <motion.nav
-      className={`${styles.nav} ${isSticky ? styles.sticky : ''}`}
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay: 0.8 }}
+    <nav
+      className={styles.nav}
     >
       <div className={styles.container}>
         <div className={styles.centerGroup}>
@@ -69,7 +57,7 @@ export function Navigation({ currentEra }: NavigationProps) {
           </div>
         </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 }
 

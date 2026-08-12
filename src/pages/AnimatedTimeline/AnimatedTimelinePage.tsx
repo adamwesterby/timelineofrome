@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { lazy, Suspense, useState, useCallback, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { ANIMATED_EVENTS } from './data/animatedEvents';
 import { getSceneAssetSources, hasSceneVersion } from './data/sceneSpecs';
@@ -6,17 +6,19 @@ import { AnimatedScene } from './components/AnimatedScene';
 import { SceneOverlay } from './components/SceneOverlay';
 import { ProgressBar } from './components/ProgressBar';
 import { PlayPauseButton } from './components/PlayPauseButton';
-import {
-  SceneQaPanel,
-  type SceneQaCheckId,
-  type SceneQaChecklist,
-} from './components/SceneQaPanel';
+import type { SceneQaCheckId, SceneQaChecklist } from './components/SceneQaPanel';
 import { useKeyboardNavigation } from './hooks/useKeyboardNavigation';
 import { useSwipeNavigation } from './hooks/useSwipeNavigation';
 import { useAutoPlay } from './hooks/useAutoPlay';
 import { trackAnalyticsEvent } from '../../lib/analytics';
 import type { SceneAssetVersion } from './types/scene';
 import styles from './AnimatedTimelinePage.module.css';
+
+const SceneQaPanel = import.meta.env.DEV
+  ? lazy(() =>
+      import('./components/SceneQaPanel').then((module) => ({ default: module.SceneQaPanel }))
+    )
+  : null;
 
 const QA_QUERY_FLAG = 'qa';
 const QA_VERSION_QUERY = 'sceneVersion';
@@ -53,6 +55,8 @@ export default function AnimatedTimelinePage() {
   const [isPlaying, setIsPlaying] = useState(() => (isQaMode ? !prefersReducedMotion : false));
   const [isDetailsExpanded, setIsDetailsExpanded] = useState(false);
   const wasPlayingBeforeDetailsRef = useRef(false);
+  const shouldFocusAfterStartRef = useRef(false);
+  const sceneViewportRef = useRef<HTMLDivElement>(null);
   const [sceneVersion, setSceneVersion] = useState<SceneAssetVersion>(
     () => (isQaMode ? queryVersion ?? 'v3' : 'v3')
   );
@@ -74,16 +78,25 @@ export default function AnimatedTimelinePage() {
   const qaSceneKey = `${currentEvent.id}:${sceneVersion}`;
   const currentChecklist = qaChecklistByScene[qaSceneKey] ?? createEmptyChecklist();
 
-  // Lock body scroll on mount
+  // The intro can scroll at small viewport heights and under text zoom. Lock the
+  // body only once the full-screen experience is running.
   useEffect(() => {
-    const prev = document.body.style.overflow;
+    if (!hasStarted) return;
+
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    document.title = 'Animated Timeline | Timeline of Rome';
     return () => {
-      document.body.style.overflow = prev;
-      document.title = 'Timeline of Rome (753 BC to 476 AD) | Kingdom, Republic, Empire';
+      document.body.style.overflow = previousOverflow;
     };
-  }, []);
+  }, [hasStarted]);
+
+  useEffect(() => {
+    if (!hasStarted || !shouldFocusAfterStartRef.current) return;
+
+    shouldFocusAfterStartRef.current = false;
+    const frame = window.requestAnimationFrame(() => sceneViewportRef.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
+  }, [hasStarted]);
 
   useEffect(() => {
     if (!isQaMode) return;
@@ -172,15 +185,17 @@ export default function AnimatedTimelinePage() {
 
   const onTogglePlay = useCallback(() => {
     if (!hasStarted) return;
+    if (prefersReducedMotion) return;
     if (isDetailsExpanded) return;
     setIsPlaying((playing) => !playing);
-  }, [hasStarted, isDetailsExpanded]);
+  }, [hasStarted, isDetailsExpanded, prefersReducedMotion]);
 
   const onStartExperience = useCallback(() => {
     trackAnalyticsEvent('animated_experience_start', {
       start_event_id: currentEvent.id,
       start_event_title: currentEvent.title,
     });
+    shouldFocusAfterStartRef.current = true;
     setHasStarted(true);
     setIsPlaying(!prefersReducedMotion);
   }, [currentEvent.id, currentEvent.title, prefersReducedMotion]);
@@ -263,10 +278,23 @@ export default function AnimatedTimelinePage() {
   }, [currentIndex, hasStarted, sceneVersion, total]);
 
   return (
-    <div className={styles.container}>
+    <main
+      id="main-content"
+      className={styles.container}
+      aria-labelledby="animated-page-title"
+      style={hasStarted ? undefined : { overflowY: 'auto' }}
+    >
+      <h1 className="visually-hidden" id="animated-page-title">
+        Timeline of Rome: Animated Experience
+      </h1>
       {hasStarted ? (
         <>
-          <div className={styles.viewport}>
+          <div
+            className={styles.viewport}
+            ref={sceneViewportRef}
+            tabIndex={-1}
+            aria-labelledby={`scene-title-${currentEvent.id}`}
+          >
             <AnimatePresence mode="wait" custom={direction}>
               <AnimatedScene
                 key={`${currentEvent.id}-${sceneVersion}`}
@@ -292,32 +320,45 @@ export default function AnimatedTimelinePage() {
             {currentEvent.yearDisplay}: {currentEvent.title} - {currentEvent.summary}
           </div>
 
-          {isQaMode ? (
-            <SceneQaPanel
-              events={ANIMATED_EVENTS}
-              currentIndex={currentIndex}
-              sceneVersion={sceneVersion}
-              hasV2ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v2')}
-              hasV3ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v3')}
-              isPlaying={isPlaying}
-              checklist={currentChecklist}
-              onSelectEvent={goTo}
-              onSceneVersionChange={onChangeSceneVersion}
-              onTogglePlay={onTogglePlay}
-              onChecklistChange={onChecklistChange}
-            />
+          {isQaMode && SceneQaPanel ? (
+            <Suspense fallback={null}>
+              <SceneQaPanel
+                events={ANIMATED_EVENTS}
+                currentIndex={currentIndex}
+                sceneVersion={sceneVersion}
+                hasV2ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v2')}
+                hasV3ForCurrentEvent={hasSceneVersion(currentEvent.id, 'v3')}
+                isPlaying={isPlaying}
+                checklist={currentChecklist}
+                onSelectEvent={goTo}
+                onSceneVersionChange={onChangeSceneVersion}
+                onTogglePlay={onTogglePlay}
+                onChecklistChange={onChecklistChange}
+              />
+            </Suspense>
           ) : null}
 
-          <ProgressBar currentIndex={currentIndex} onNavigate={goTo} />
-          <PlayPauseButton isPlaying={isPlaying} onToggle={onTogglePlay} />
+          <ProgressBar
+            currentIndex={currentIndex}
+            onNavigate={goTo}
+            isDetailsExpanded={isDetailsExpanded}
+          />
+          <PlayPauseButton
+            isPlaying={isPlaying}
+            onToggle={onTogglePlay}
+            isDisabled={prefersReducedMotion || isDetailsExpanded}
+            disabledLabel={prefersReducedMotion
+              ? 'Auto-play unavailable while reduced motion is enabled'
+              : 'Close details to resume auto-play'}
+          />
         </>
       ) : (
         <section className={styles.intro} aria-labelledby="animated-intro-title">
           <div className={styles.introCard}>
             <p className={styles.introLabel}>Animated Experience</p>
-            <h1 className={styles.introTitle} id="animated-intro-title">
+            <h2 className={styles.introTitle} id="animated-intro-title">
               Timeline of Rome
-            </h1>
+            </h2>
             <p className={styles.introRange}>753 BC to 476 AD</p>
             <p className={styles.introText}>
               Step through Roman history with illustrated scenes that highlight major turning points from the
@@ -332,7 +373,7 @@ export default function AnimatedTimelinePage() {
           </div>
         </section>
       )}
-    </div>
+    </main>
   );
 }
 

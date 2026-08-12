@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import type { TimelineEvent } from '../../types';
 import styles from './EventDetail.module.css';
 
@@ -8,14 +8,16 @@ interface EventDetailProps {
 }
 
 export function EventDetail({ id, event }: EventDetailProps) {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <motion.div
       id={id}
       className={styles.detail}
-      initial={{ height: 0, opacity: 0 }}
+      initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
       animate={{ height: 'auto', opacity: 1 }}
-      exit={{ height: 0, opacity: 0 }}
-      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeInOut' }}
     >
       <div className={styles.content}>
         <div className={styles.divider} />
