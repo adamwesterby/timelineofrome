@@ -3,14 +3,31 @@ import styles from './PlayPauseButton.module.css';
 interface PlayPauseButtonProps {
   isPlaying: boolean;
   onToggle: () => void;
+  isDisabled?: boolean;
+  disabledLabel?: string;
 }
 
-export function PlayPauseButton({ isPlaying, onToggle }: PlayPauseButtonProps) {
+export function PlayPauseButton({
+  isPlaying,
+  onToggle,
+  isDisabled = false,
+  disabledLabel,
+}: PlayPauseButtonProps) {
+  const label = isDisabled
+    ? disabledLabel ?? 'Auto-play is currently unavailable'
+    : isPlaying
+      ? 'Pause auto-play'
+      : 'Resume auto-play';
+
   return (
     <button
       className={styles.button}
-      onClick={onToggle}
-      aria-label={isPlaying ? 'Pause auto-play' : 'Resume auto-play'}
+      onClick={() => {
+        if (!isDisabled) onToggle();
+      }}
+      aria-disabled={isDisabled || undefined}
+      aria-label={label}
+      title={label}
     >
       {isPlaying ? (
         <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">

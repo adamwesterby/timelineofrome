@@ -31,6 +31,7 @@ export function ViewToggle({ theme = 'light' }: ViewToggleProps) {
         to="/"
         className={`${styles.toggleOption} ${isAnimated ? styles.toggleActive : ''}`}
         onClick={() => handleViewSwitch('animated')}
+        aria-current={isAnimated ? 'page' : undefined}
       >
         Animated
       </Link>
@@ -38,6 +39,7 @@ export function ViewToggle({ theme = 'light' }: ViewToggleProps) {
         to="/timeline/"
         className={`${styles.toggleOption} ${!isAnimated ? styles.toggleActive : ''}`}
         onClick={() => handleViewSwitch('timeline')}
+        aria-current={!isAnimated ? 'page' : undefined}
       >
         Timeline
       </Link>

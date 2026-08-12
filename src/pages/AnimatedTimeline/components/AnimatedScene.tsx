@@ -32,6 +32,12 @@ const variants = {
   }),
 };
 
+const reducedMotionVariants = {
+  enter: { opacity: 1 },
+  center: { opacity: 1 },
+  exit: { opacity: 1 },
+};
+
 export function AnimatedScene({
   event,
   direction,
@@ -52,14 +58,16 @@ export function AnimatedScene({
     <motion.div
       className={styles.scene}
       custom={direction}
-      variants={variants}
-      initial="enter"
+      variants={prefersReducedMotion ? reducedMotionVariants : variants}
+      initial={prefersReducedMotion ? false : 'enter'}
       animate="center"
       exit="exit"
-      transition={{
-        duration: 0.6,
-        ease: [0.4, 0, 0.2, 1],
-      }}
+      transition={prefersReducedMotion
+        ? { duration: 0 }
+        : {
+            duration: 0.6,
+            ease: [0.4, 0, 0.2, 1],
+          }}
     >
       <div className={styles.illustrationWrapper}>
         {sceneSpec.renderMode === 'single-image' ? (

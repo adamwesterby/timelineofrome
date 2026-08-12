@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { trackAnalyticsEvent } from '../../lib/analytics';
 import type { TimelineEvent } from '../../types';
 import { EventDetail } from '../EventDetail/EventDetail';
@@ -7,11 +7,11 @@ import styles from './TimelineEvent.module.css';
 
 interface TimelineEventProps {
   event: TimelineEvent;
-  index: number;
 }
 
-export function TimelineEventComponent({ event, index }: TimelineEventProps) {
+export function TimelineEventComponent({ event }: TimelineEventProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
   const isMajor = event.significance === 'major';
   const handleToggleExpand = () => {
     setIsExpanded((previouslyExpanded) => {
@@ -30,13 +30,9 @@ export function TimelineEventComponent({ event, index }: TimelineEventProps) {
   };
 
   return (
-    <motion.article
+    <article
       id={`event-${event.id}`}
       className={`${styles.event} ${isMajor ? styles.major : styles.minor}`}
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-50px' }}
-      transition={{ duration: 0.5, delay: index * 0.05 }}
     >
       {/* Timeline dot */}
       <div className={styles.dot} aria-hidden="true">
@@ -51,7 +47,7 @@ export function TimelineEventComponent({ event, index }: TimelineEventProps) {
       {/* Card */}
       <motion.div
         className={styles.card}
-        whileHover={{ y: -2 }}
+        whileHover={prefersReducedMotion ? undefined : { y: -2 }}
         transition={{ duration: 0.2 }}
       >
         <button
@@ -75,14 +71,12 @@ export function TimelineEventComponent({ event, index }: TimelineEventProps) {
 
           <div className={styles.content}>
             <h3 className={styles.title}>
-              <a href={`#event-${event.id}`} className={styles.permalink}>
-                {event.title}
-              </a>
+              {event.title}
             </h3>
             <p className={styles.summary}>{event.summary}</p>
 
             <span className={styles.expandHint}>
-              {isExpanded ? 'Click to collapse' : 'Click to read more'}
+              {isExpanded ? 'Hide details' : 'Show details'}
               <ExpandIcon isExpanded={isExpanded} />
             </span>
           </div>
@@ -97,11 +91,13 @@ export function TimelineEventComponent({ event, index }: TimelineEventProps) {
           )}
         </AnimatePresence>
       </motion.div>
-    </motion.article>
+    </article>
   );
 }
 
 function ExpandIcon({ isExpanded }: { isExpanded: boolean }) {
+  const prefersReducedMotion = useReducedMotion();
+
   return (
     <motion.svg
       width="16"
@@ -109,7 +105,7 @@ function ExpandIcon({ isExpanded }: { isExpanded: boolean }) {
       viewBox="0 0 16 16"
       fill="none"
       className={styles.expandIcon}
-      animate={{ rotate: isExpanded ? 180 : 0 }}
+      animate={prefersReducedMotion ? undefined : { rotate: isExpanded ? 180 : 0 }}
       transition={{ duration: 0.2 }}
     >
       <path

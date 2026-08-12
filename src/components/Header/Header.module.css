@@ -1,96 +1,117 @@
 .header {
-  padding: var(--spacing-3xl) var(--spacing-lg) var(--spacing-2xl);
-  text-align: center;
   position: relative;
-  background: linear-gradient(
-    180deg,
-    var(--color-papyrus-cream) 0%,
-    var(--color-papyrus-light) 100%
-  );
+  overflow: hidden;
+  padding: calc(var(--safe-top) + 6.5rem) var(--spacing-lg) 5.5rem;
+  color: var(--color-papyrus-cream);
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% -20%, rgba(212, 168, 75, 0.2), transparent 24rem),
+    linear-gradient(135deg, #2d1710 0%, #1d100c 48%, #29150e 100%);
+  border-bottom: 1px solid rgba(212, 168, 75, 0.55);
+}
+
+.header::before {
+  position: absolute;
+  inset: 1.25rem;
+  pointer-events: none;
+  content: '';
+  border: 1px solid rgba(212, 168, 75, 0.22);
+  border-bottom-color: transparent;
 }
 
 .container {
-  display: flex;
+  position: relative;
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) 70px;
   align-items: center;
-  justify-content: center;
-  gap: var(--spacing-xl);
+  gap: clamp(1rem, 4vw, 3.5rem);
   max-width: var(--max-width);
   margin: 0 auto;
 }
 
 .laurelLeft,
 .laurelRight {
-  color: var(--color-accent-gold);
-  flex-shrink: 0;
+  color: var(--color-accent-gold-light);
+  opacity: 0.86;
 }
 
 .titleBlock {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.preTitle {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-style: italic;
-  color: var(--color-ink-faded);
-  letter-spacing: 0.05em;
-  margin: 0;
 }
 
 .title {
-  font-family: var(--font-heading-decorative);
-  font-size: 3rem;
-  font-weight: 700;
-  color: var(--color-ink-black);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  max-width: 13ch;
   margin: 0;
-  text-shadow: 1px 1px 0 rgba(184, 134, 11, 0.2);
+  color: var(--color-papyrus-cream);
+  font-family: var(--font-heading-decorative);
+  font-size: clamp(3rem, 7vw, 5.35rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: 0.075em;
+  text-wrap: balance;
+  text-transform: uppercase;
+  text-shadow: 0 5px 20px rgba(0, 0, 0, 0.28);
 }
 
 .subtitle {
+  margin: var(--spacing-lg) 0 0;
+  color: var(--color-accent-gold-light);
   font-family: var(--font-heading);
-  font-size: 1.25rem;
-  color: var(--color-accent-gold);
-  letter-spacing: 0.3em;
-  margin: 0;
-  font-weight: 500;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
 }
 
 .tagline {
+  max-width: 46ch;
+  margin: var(--spacing-xl) 0 0;
+  color: rgba(251, 244, 229, 0.78);
   font-family: var(--font-body);
-  font-size: 1.125rem;
-  color: var(--color-ink-brown);
-  max-width: 500px;
-  margin: var(--spacing-md) 0 0;
-  line-height: 1.6;
+  font-size: 1.12rem;
+  line-height: 1.65;
 }
 
 .divider {
-  width: 200px;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    var(--color-accent-gold) 20%,
-    var(--color-accent-gold) 80%,
-    transparent 100%
-  );
+  position: relative;
+  width: 8rem;
+  height: 3px;
   margin: var(--spacing-2xl) auto 0;
+  background: var(--color-accent-gold-light);
   transform-origin: center;
+}
+
+.divider::before,
+.divider::after {
+  position: absolute;
+  top: -3px;
+  width: 9px;
+  height: 9px;
+  content: '';
+  background: var(--color-accent-gold-light);
+  transform: rotate(45deg);
+}
+
+.divider::before {
+  left: -4px;
+}
+
+.divider::after {
+  right: -4px;
 }
 
 @media (max-width: 768px) {
   .header {
-    padding: calc(var(--spacing-2xl) + 44px) var(--spacing-md) var(--spacing-xl);
+    padding: calc(var(--safe-top) + 5.75rem) var(--spacing-md) 4rem;
+  }
+
+  .header::before {
+    inset: 0.75rem;
   }
 
   .container {
-    flex-direction: column;
-    gap: var(--spacing-md);
+    display: block;
   }
 
   .laurelLeft,
@@ -99,37 +120,30 @@
   }
 
   .title {
-    font-size: 2rem;
-    letter-spacing: 0.15em;
+    max-width: 11ch;
+    font-size: clamp(2.45rem, 13vw, 4rem);
+    line-height: 1.08;
+    letter-spacing: 0.055em;
   }
 
   .subtitle {
-    font-size: 1rem;
-    letter-spacing: 0.2em;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
   }
 
   .tagline {
-    font-size: 1rem;
-    padding: 0 var(--spacing-md);
-  }
-
-  .divider {
-    width: 150px;
-    margin-top: var(--spacing-xl);
+    max-width: 30ch;
+    font-size: 1.05rem;
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 390px) {
   .header {
-    padding: calc(var(--spacing-xl) + 44px) var(--spacing-md) var(--spacing-xl);
+    padding-right: 1.35rem;
+    padding-left: 1.35rem;
   }
 
   .title {
-    font-size: 1.5rem;
-    letter-spacing: 0.1em;
-  }
-
-  .preTitle {
-    font-size: 0.875rem;
+    font-size: 2.35rem;
   }
 }

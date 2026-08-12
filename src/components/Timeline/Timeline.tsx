@@ -31,7 +31,7 @@ export function Timeline({ events }: TimelineProps) {
   }, [events]);
 
   return (
-    <main className={styles.timeline}>
+    <main className={styles.timeline} id="main-content">
       {ERAS.map((era: Era) => (
         <EraSection
           key={era.id}
