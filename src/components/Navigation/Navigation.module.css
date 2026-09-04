@@ -1,140 +1,297 @@
-.nav {
+.sentinel {
+  height: 1px;
+  margin-top: -1px;
+}
+
+.ruler {
   position: sticky;
   top: 0;
   z-index: 100;
-  padding: 0.7rem var(--spacing-lg);
-  background: rgba(230, 206, 162, 0.97);
-  border-bottom: 1px solid rgba(92, 61, 46, 0.28);
-  box-shadow: 0 8px 24px rgba(44, 24, 16, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  min-height: var(--nav-height);
+  padding: 0 var(--gutter);
+  color: var(--field-text);
+  background: var(--field);
+  border-bottom: 1px solid transparent;
+  transition:
+    border-color var(--dur-slow) var(--ease-out),
+    box-shadow var(--dur-slow) var(--ease-out);
 }
 
-.nav.sticky {
-  box-shadow: 0 12px 28px rgba(44, 24, 16, 0.16);
+.ruler.pinned {
+  border-bottom-color: var(--field-edge);
+  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.6);
 }
 
-.container {
-  max-width: var(--max-width);
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 10rem) minmax(0, 1fr) minmax(0, 8.5rem);
+  align-items: center;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  width: min(100%, var(--page-width));
+  min-height: var(--nav-height);
   margin: 0 auto;
 }
 
-.centerGroup {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  gap: var(--spacing-lg);
-  align-items: center;
+.mark,
+.readout {
+  margin: 0;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity var(--dur-slow) var(--ease-out),
+    transform var(--dur-slow) var(--ease-out);
 }
 
-.label {
-  color: var(--color-ink-brown);
-  font-family: var(--font-heading);
+.pinned .mark,
+.pinned .readout {
+  opacity: 1;
+  transform: none;
+}
+
+.mark {
+  color: var(--field-text-muted);
+  font-family: var(--font-display);
   font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   white-space: nowrap;
 }
 
-.buttons {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  overflow: hidden;
-  border: 1px solid rgba(92, 61, 46, 0.3);
-  border-radius: var(--border-radius-md);
-  background: rgba(251, 244, 229, 0.45);
-}
-
-.button {
+.track {
+  position: relative;
   display: flex;
-  min-height: 58px;
-  padding: 0.45rem var(--spacing-md);
+  padding-top: 0.55rem;
+  align-items: flex-start;
+}
+
+.baseline,
+.fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  pointer-events: none;
+}
+
+.baseline {
+  background: rgba(230, 191, 106, 0.28);
+  transform-origin: left;
+  animation: draw 1100ms var(--ease-out) 700ms both;
+}
+
+.fill {
+  height: 2px;
+  margin-top: -0.5px;
+  background: var(--gold-bright);
+  box-shadow: 0 0 12px var(--gold-glow);
+  transform: scaleX(var(--timeline-progress, 0));
+  transform-origin: left;
+}
+
+.segment {
+  position: relative;
+  display: flex;
+  min-height: 44px;
+  flex-basis: 0;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-ink-black);
-  text-align: center;
+  align-items: flex-start;
+  gap: 0.15rem;
+  padding: 0.35rem 0.5rem 0 0;
+  color: var(--field-text-faint);
   text-decoration: none;
-  border-right: 1px solid rgba(92, 61, 46, 0.24);
-  transition:
-    color var(--transition-fast),
-    background-color var(--transition-fast);
+  animation: rise 600ms var(--ease-out) both;
+  transition: color var(--dur-base) ease;
 }
 
-.button:last-child {
-  border-right: 0;
+.segment:nth-child(3) {
+  animation-delay: 1000ms;
 }
 
-.button:hover {
-  color: var(--color-ink-black);
-  background: rgba(251, 244, 229, 0.84);
+.segment:nth-child(4) {
+  animation-delay: 1180ms;
 }
 
-.button.active {
-  color: var(--color-papyrus-cream);
-  background: var(--color-surface-ink);
+.segment:nth-child(5) {
+  animation-delay: 1400ms;
 }
 
-.buttonText {
-  color: inherit;
-  font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  transition: color var(--transition-fast);
+.terminus {
+  animation: rise 600ms var(--ease-out) 1620ms both;
 }
 
-.buttonYears {
-  margin-top: 0.2rem;
-  color: var(--color-ink-faded);
-  font-family: var(--font-body);
+.segment:hover {
+  color: var(--field-text);
+}
+
+.segment.current {
+  color: var(--gold-bright);
+}
+
+.segment:focus-visible {
+  outline-offset: 2px;
+}
+
+.tick {
+  position: absolute;
+  top: -0.55rem;
+  left: 0;
+  width: 1px;
+  height: 0.55rem;
+  background: rgba(230, 191, 106, 0.55);
+}
+
+.segment.current .tick {
+  background: var(--gold-bright);
+  box-shadow: 0 0 8px var(--gold-glow);
+}
+
+.segmentName {
+  font-family: var(--font-display);
   font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: font-size var(--dur-slow) var(--ease-out);
+}
+
+.segmentYear {
+  font-family: var(--font-body);
+  font-size: 0.86rem;
+  font-variant-numeric: tabular-nums;
   line-height: 1.2;
-  transition: color var(--transition-fast);
+  white-space: nowrap;
 }
 
-.button.active .buttonText {
-  color: var(--color-papyrus-cream);
+.terminus {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-top: 0.35rem;
+  color: var(--field-text-faint);
 }
 
-.button.active .buttonYears {
-  color: var(--color-accent-gold-light);
+.terminus .tick {
+  right: 0;
+  left: auto;
 }
 
-@media (max-width: 768px) {
-  .nav {
-    padding: 0.45rem var(--spacing-sm);
+.readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: var(--field-text-muted);
+  text-align: right;
+}
+
+.readoutLabel {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.readoutValue {
+  color: var(--gold-bright);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'mark readout'
+      'track track';
+    row-gap: 0.1rem;
+    padding: 0.55rem 0 0.35rem;
   }
 
-  .centerGroup {
-    display: block;
+  .mark {
+    grid-area: mark;
+    font-size: 0.64rem;
   }
 
-  .label {
+  .readout {
+    grid-area: readout;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .mark,
+  .readout {
+    opacity: 1;
+    transform: none;
+  }
+
+  .readoutValue {
+    font-size: 1rem;
+  }
+
+  .track {
+    grid-area: track;
+  }
+
+  .segment {
+    min-height: 40px;
+  }
+
+  .segmentName {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+  }
+
+  .segmentYear {
+    font-size: 0.78rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .segmentArticle {
     display: none;
   }
 
-  .button {
-    min-height: 56px;
-    padding: 0.35rem 0.3rem;
-  }
-
-  .buttonText {
-    font-size: 0.72rem;
-    letter-spacing: 0.055em;
-  }
-
-  .buttonYears {
-    font-size: 0.68rem;
+  .segmentName {
+    font-size: 0.6rem;
   }
 }
 
-@media (max-width: 390px) {
-  .buttonText {
-    font-size: 0.68rem;
-  }
-
-  .buttonYears {
-    font-size: 0.64rem;
+@media (prefers-reduced-motion: reduce) {
+  .baseline,
+  .segment,
+  .terminus {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

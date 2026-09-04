@@ -1,16 +1,10 @@
 import type { EraType, SignificanceType } from '../types';
 
-export type ViewMode = 'animated' | 'timeline';
-
 interface AnalyticsEventPayloadMap {
   spa_page_view: {
     page_location: string;
     page_path: string;
     page_title: string;
-  };
-  view_mode_switch: {
-    from_view: ViewMode;
-    to_view: ViewMode;
   };
   timeline_era_navigate: {
     era_id: EraType;
@@ -21,10 +15,6 @@ interface AnalyticsEventPayloadMap {
     event_era: EraType;
     event_year: number;
     event_significance: SignificanceType;
-  };
-  animated_experience_start: {
-    start_event_id: string;
-    start_event_title: string;
   };
 }
 

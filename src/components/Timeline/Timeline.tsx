@@ -22,7 +22,6 @@ export function Timeline({ events }: TimelineProps) {
       }
     });
 
-    // Sort events within each era by year (ascending, accounting for BC/AD)
     Object.keys(grouped).forEach((era) => {
       grouped[era].sort((a, b) => a.year - b.year);
     });
@@ -31,14 +30,10 @@ export function Timeline({ events }: TimelineProps) {
   }, [events]);
 
   return (
-    <main className={styles.timeline} id="main-content">
+    <div className={styles.timeline}>
       {ERAS.map((era: Era) => (
-        <EraSection
-          key={era.id}
-          era={era}
-          events={eventsByEra[era.id] || []}
-        />
+        <EraSection key={era.id} era={era} events={eventsByEra[era.id] || []} />
       ))}
-    </main>
+    </div>
   );
 }

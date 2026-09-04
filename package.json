@@ -18,7 +18,8 @@
     "reddit:assets": "npm run reddit:capture && npm run reddit:gif && npm run reddit:verify"
   },
   "dependencies": {
-    "framer-motion": "^11.0.0",
+    "@fontsource-variable/cinzel": "^5.3.0",
+    "@fontsource-variable/eb-garamond": "^5.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^7.13.0"
