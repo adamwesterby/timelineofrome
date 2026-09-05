@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { useId, useState } from 'react';
 import { trackAnalyticsEvent } from '../../lib/analytics';
 import type { TimelineEvent } from '../../types';
+import { isoYear } from '../../lib/years';
 import { EventDetail } from '../EventDetail/EventDetail';
 import styles from './TimelineEvent.module.css';
 
@@ -11,12 +11,13 @@ interface TimelineEventProps {
 
 export function TimelineEventComponent({ event }: TimelineEventProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const prefersReducedMotion = useReducedMotion();
+  const detailId = useId();
   const isMajor = event.significance === 'major';
-  const handleToggleExpand = () => {
-    setIsExpanded((previouslyExpanded) => {
-      const nextExpanded = !previouslyExpanded;
-      if (nextExpanded) {
+
+  const toggle = () => {
+    setIsExpanded((previous) => {
+      const next = !previous;
+      if (next) {
         trackAnalyticsEvent('timeline_event_expand', {
           event_id: event.id,
           event_title: event.title,
@@ -25,96 +26,66 @@ export function TimelineEventComponent({ event }: TimelineEventProps) {
           event_significance: event.significance,
         });
       }
-      return nextExpanded;
+      return next;
     });
   };
 
   return (
-    <article
+    <li
       id={`event-${event.id}`}
-      className={`${styles.event} ${isMajor ? styles.major : styles.minor}`}
+      className={`${styles.entry} ${isMajor ? styles.major : styles.minor} ${isExpanded ? styles.open : ''}`}
+      data-event-year={event.year}
     >
-      {/* Timeline dot */}
-      <div className={styles.dot} aria-hidden="true">
-        <span className={styles.dotInner} />
-      </div>
+      <p className={styles.year}>
+        <time dateTime={isoYear(event.year)}>{event.yearDisplay}</time>
+      </p>
 
-      {/* Year badge */}
-      <div className={styles.yearBadge}>
-        <span className={styles.year}>{event.yearDisplay}</span>
-      </div>
+      <span className={styles.dot} aria-hidden="true" />
 
-      {/* Card */}
-      <motion.div
-        className={styles.card}
-        whileHover={prefersReducedMotion ? undefined : { y: -2 }}
-        transition={{ duration: 0.2 }}
-      >
+      <div className={styles.body}>
+        {isMajor && event.imageUrl && (
+          <figure className={styles.figure}>
+            <img
+              className={styles.image}
+              src={event.imageUrl}
+              alt={event.imageAlt || event.title}
+              loading="lazy"
+              decoding="async"
+              width={640}
+              height={360}
+            />
+          </figure>
+        )}
+
+        <h3 className={styles.title}>
+          <button
+            type="button"
+            className={styles.titleButton}
+            onClick={toggle}
+            aria-expanded={isExpanded}
+            aria-controls={detailId}
+          >
+            {event.title}
+          </button>
+        </h3>
+
+        <p className={styles.summary}>{event.summary}</p>
+
         <button
-          className={styles.cardButton}
-          onClick={handleToggleExpand}
+          type="button"
+          className={styles.toggle}
+          onClick={toggle}
           aria-expanded={isExpanded}
-          aria-controls={`event-detail-${event.id}`}
+          aria-controls={detailId}
         >
-          {/* Image for major events */}
-          {isMajor && event.imageUrl && (
-            <div className={styles.imageWrapper}>
-              <img
-                src={event.imageUrl}
-                alt={event.imageAlt || event.title}
-                className={styles.image}
-                loading="lazy"
-              />
-              <div className={styles.imageOverlay} />
-            </div>
-          )}
-
-          <div className={styles.content}>
-            <h3 className={styles.title}>
-              {event.title}
-            </h3>
-            <p className={styles.summary}>{event.summary}</p>
-
-            <span className={styles.expandHint}>
-              {isExpanded ? 'Hide details' : 'Show details'}
-              <ExpandIcon isExpanded={isExpanded} />
-            </span>
-          </div>
+          <span>{isExpanded ? 'Close the account' : 'Read the full account'}</span>
+          <svg className={styles.toggleIcon} width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M3 5.25 7 9.25l4-4" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </button>
 
-        <AnimatePresence>
-          {isExpanded && (
-            <EventDetail
-              id={`event-detail-${event.id}`}
-              event={event}
-            />
-          )}
-        </AnimatePresence>
-      </motion.div>
-    </article>
-  );
-}
-
-function ExpandIcon({ isExpanded }: { isExpanded: boolean }) {
-  const prefersReducedMotion = useReducedMotion();
-
-  return (
-    <motion.svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      fill="none"
-      className={styles.expandIcon}
-      animate={prefersReducedMotion ? undefined : { rotate: isExpanded ? 180 : 0 }}
-      transition={{ duration: 0.2 }}
-    >
-      <path
-        d="M4 6L8 10L12 6"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </motion.svg>
+        <EventDetail id={detailId} event={event} isOpen={isExpanded} />
+      </div>
+    </li>
   );
 }

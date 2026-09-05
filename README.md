@@ -1,13 +1,14 @@
 # Timeline of Rome
 
-A React + TypeScript single-page timeline that presents 1,229 years of Roman history in a visual, scroll-driven experience.
+A React + TypeScript single-page timeline that presents 1,229 years of Roman history as one scroll-driven chronology, from the founding of the city to the fall of the Western Empire.
 
 ## Tech stack
 
 - React 18
 - TypeScript
 - Vite
-- Framer Motion
+- CSS-driven motion (no animation library)
+- Self-hosted variable fonts (Cinzel, EB Garamond) via Fontsource
 
 ## Local development
 
@@ -46,10 +47,8 @@ The official GTM `<head>` + `<noscript>` snippets live in `index.html`.
 Data layer events emitted by the app:
 
 - `spa_page_view` with `page_location`, `page_path`, `page_title`
-- `view_mode_switch` with `from_view`, `to_view`
 - `timeline_era_navigate` with `era_id`
 - `timeline_event_expand` with `event_id`, `event_title`, `event_era`, `event_year`, `event_significance`
-- `animated_experience_start` with `start_event_id`, `start_event_title`
 
 ### GTM configuration
 
@@ -60,39 +59,31 @@ Data layer events emitted by the app:
    - Trigger: `All Pages`
 2. Create custom event triggers for:
    - `spa_page_view`
-   - `view_mode_switch`
    - `timeline_era_navigate`
    - `timeline_event_expand`
-   - `animated_experience_start`
 3. Create data layer variables:
    - `page_location`, `page_path`, `page_title`
-   - `from_view`, `to_view`
    - `era_id`
    - `event_id`, `event_title`, `event_era`, `event_year`, `event_significance`
-   - `start_event_id`, `start_event_title`
 4. Create GA4 event tags:
    - `GA4 - page_view (SPA)` -> event name `page_view`, trigger `spa_page_view`
-   - `GA4 - view_mode_switch` -> event name `view_mode_switch`, trigger `view_mode_switch`
    - `GA4 - timeline_era_navigate` -> event name `timeline_era_navigate`, trigger `timeline_era_navigate`
    - `GA4 - timeline_event_expand` -> event name `timeline_event_expand`, trigger `timeline_event_expand`
-   - `GA4 - animated_experience_start` -> event name `animated_experience_start`, trigger `animated_experience_start`
 5. Publish GTM as version `analytics-standard-initial`.
 
 ### GA4 configuration
 
-1. Confirm all 5 events are arriving in Realtime / Events.
+1. Confirm all 3 events are arriving in Realtime / Events.
 2. Mark `timeline_event_expand` as a key event.
 3. Create event-scoped custom dimensions for:
-   - `from_view`, `to_view`, `era_id`
+   - `era_id`
    - `event_id`, `event_title`, `event_era`, `event_year`, `event_significance`
-   - `start_event_id`, `start_event_title`
 4. Keep Enhanced Measurement enabled.
 
 ## Routes
 
-- `/` is the animated timeline view (default experience).
-- `/animated/` is a compatibility alias for the animated view (intentionally non-indexable).
-- `/timeline/` is the canonical, indexable detailed timeline route.
+- `/` is the timeline. It is the only page and the canonical URL.
+- `/timeline/` and `/animated/` are legacy routes from the earlier two-view site. Both redirect to `/` and are marked non-indexable.
 
 ## Deploy
 

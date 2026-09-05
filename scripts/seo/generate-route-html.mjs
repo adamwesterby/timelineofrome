@@ -3,17 +3,20 @@ import { dirname, resolve } from 'node:path';
 
 const DIST_INDEX_PATH = resolve('dist/index.html');
 
+// Legacy routes from when the site shipped two views. Each one still gets a
+// static HTML file so deep links resolve on GitHub Pages, but every copy
+// canonicalises to the root, which is now the only timeline page.
 const routeConfigs = [
   {
     name: 'timeline',
     outputPath: resolve('dist/timeline/index.html'),
     metadata: {
-      title: 'Timeline of Rome: major events from 753 BC to 476 AD',
+      title: 'Timeline of Rome (753 BC to 476 AD) | Kingdom, Republic, Empire',
       description:
-        'Study a clear timeline of Rome with major events from 753 BC to 476 AD, spanning the Roman Kingdom, Roman Republic, and Roman Empire.',
-      canonical: 'https://timelineofrome.com/timeline/',
-      ogUrl: 'https://timelineofrome.com/timeline/',
-      robots: 'index, follow',
+        'Explore a student-friendly timeline of Rome from 753 BC to 476 AD, covering major events across the Roman Kingdom, Roman Republic, and Roman Empire.',
+      canonical: 'https://timelineofrome.com/',
+      ogUrl: 'https://timelineofrome.com/',
+      robots: 'noindex, follow',
     },
   },
   {
@@ -24,7 +27,7 @@ const routeConfigs = [
       description:
         'Explore a student-friendly timeline of Rome from 753 BC to 476 AD, covering major events across the Roman Kingdom, Roman Republic, and Roman Empire.',
       canonical: 'https://timelineofrome.com/',
-      ogUrl: 'https://timelineofrome.com/animated/',
+      ogUrl: 'https://timelineofrome.com/',
       robots: 'noindex, follow',
     },
   },
@@ -69,30 +72,6 @@ function renderRouteHtml(rootHtml, metadata) {
     /<meta\s+property="og:url"\s+content="[^"]*"\s*\/?>/,
     `<meta property="og:url" content="${metadata.ogUrl ?? metadata.canonical}" />`,
     'meta[property="og:url"]'
-  );
-  routeHtml = replaceRequired(
-    routeHtml,
-    /<meta\s+property="og:title"\s+content="[^"]*"\s*\/?>/,
-    `<meta property="og:title" content="${metadata.title}" />`,
-    'meta[property="og:title"]'
-  );
-  routeHtml = replaceRequired(
-    routeHtml,
-    /<meta\s+property="og:description"\s+content="[^"]*"\s*\/?>/,
-    `<meta property="og:description" content="${metadata.description}" />`,
-    'meta[property="og:description"]'
-  );
-  routeHtml = replaceRequired(
-    routeHtml,
-    /<meta\s+name="twitter:title"\s+content="[^"]*"\s*\/?>/,
-    `<meta name="twitter:title" content="${metadata.title}" />`,
-    'meta[name="twitter:title"]'
-  );
-  routeHtml = replaceRequired(
-    routeHtml,
-    /<meta\s+name="twitter:description"\s+content="[^"]*"\s*\/?>/,
-    `<meta name="twitter:description" content="${metadata.description}" />`,
-    'meta[name="twitter:description"]'
   );
 
   return routeHtml;

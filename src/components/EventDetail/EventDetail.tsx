@@ -1,35 +1,29 @@
-import { motion, useReducedMotion } from 'framer-motion';
 import type { TimelineEvent } from '../../types';
 import styles from './EventDetail.module.css';
 
 interface EventDetailProps {
   id: string;
   event: TimelineEvent;
+  isOpen: boolean;
 }
 
-export function EventDetail({ id, event }: EventDetailProps) {
-  const prefersReducedMotion = useReducedMotion();
-
+/**
+ * The full account. Always rendered so the open/close motion is a pure CSS
+ * grid-row transition: no height measurement, no layout thrash.
+ */
+export function EventDetail({ id, event, isOpen }: EventDetailProps) {
   return (
-    <motion.div
-      id={id}
-      className={styles.detail}
-      initial={prefersReducedMotion ? false : { height: 0, opacity: 0 }}
-      animate={{ height: 'auto', opacity: 1 }}
-      exit={prefersReducedMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-      transition={{ duration: prefersReducedMotion ? 0 : 0.3, ease: 'easeInOut' }}
-    >
-      <div className={styles.content}>
-        <div className={styles.divider} />
-
-        <p className={styles.description}>{event.description}</p>
-
-        {event.imageCredit && (
-          <p className={styles.credit}>
-            <span className={styles.creditLabel}>Image:</span> {event.imageCredit}
-          </p>
-        )}
+    <div id={id} className={styles.detail} data-open={isOpen ? 'true' : 'false'}>
+      <div className={styles.clip}>
+        <div className={styles.content} aria-hidden={!isOpen} {...(isOpen ? {} : { inert: '' })}>
+          <p className={styles.description}>{event.description}</p>
+          {event.imageCredit && (
+            <p className={styles.credit}>
+              <span className={styles.creditLabel}>Image</span> {event.imageCredit}
+            </p>
+          )}
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

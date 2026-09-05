@@ -7,3 +7,5 @@ scripts/reddit/
 .env
 .env.*
 !.env.example
+.impeccable/review/
+.impeccable/*.mjs

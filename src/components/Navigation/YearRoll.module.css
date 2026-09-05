@@ -1,0 +1,54 @@
+.roll {
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+}
+
+.drum {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+  line-height: 1;
+}
+
+.strip {
+  display: flex;
+  flex-direction: column;
+  transition: transform 520ms var(--ease-out);
+  will-change: transform;
+}
+
+.digit {
+  display: block;
+  height: 1em;
+  min-width: 0.72em;
+  line-height: 1;
+  text-align: center;
+}
+
+.era {
+  position: relative;
+  display: inline-grid;
+  margin-left: 0.3em;
+}
+
+.eraMark {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transform: translateY(0.3em);
+  transition:
+    opacity 320ms var(--ease-out),
+    transform 420ms var(--ease-out);
+}
+
+.eraOn {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strip,
+  .eraMark {
+    transition: none;
+  }
+}

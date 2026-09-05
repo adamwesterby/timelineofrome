@@ -1,22 +1,20 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import { Header } from '../Header/Header';
+import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Footer } from '../Footer/Footer';
-import { ViewToggle } from '../ViewToggle/ViewToggle';
 import styles from './Layout.module.css';
 
 export function Layout() {
-  const location = useLocation();
-  const isAnimated = location.pathname === '/' || location.pathname.startsWith('/animated');
+  useEffect(() => {
+    document.documentElement.dataset.js = 'true';
+  }, []);
 
   return (
     <div className={styles.app}>
       <a className={styles.skipLink} href="#main-content">
-        Skip to main content
+        Skip to the timeline
       </a>
-      <ViewToggle theme={isAnimated ? 'dark' : 'light'} />
-      {!isAnimated && <Header />}
       <Outlet />
-      {!isAnimated && <Footer />}
+      <Footer />
     </div>
   );
 }

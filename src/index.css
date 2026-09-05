@@ -1,71 +1,72 @@
-/* CSS Custom Properties - Papyrus/Ink Theme */
+/* ------------------------------------------------------------------
+   Timeline of Rome — design tokens
+   Ink and papyrus, one gilded thread. Inscriptional capitals for
+   years and titles, a book face for the account.
+   ------------------------------------------------------------------ */
 :root {
-  /* Colors */
-  --color-papyrus-light: #f3e5c9;
-  --color-papyrus-dark: #e6cea2;
-  --color-papyrus-aged: #c9aa72;
-  --color-papyrus-cream: #fbf4e5;
-  --color-ink-black: #24130d;
-  --color-ink-brown: #5c3d2e;
-  --color-ink-faded: #70492f;
-  --color-ink-muted: #70492f;
-  --color-accent-red: #8f2f19;
-  --color-accent-red-dark: #6f1e0d;
-  --color-accent-gold: #b8860b;
-  --color-accent-gold-light: #d4a84b;
-  --color-accent-gold-text: #74431f;
-  --color-focus: #6f1e00;
-  --color-surface-raised: #fff9ec;
-  --color-surface-ink: #21120d;
-  --color-rule: rgba(92, 61, 46, 0.25);
+  /* Ground */
+  --paper: #f1e4c8;
+  --paper-bright: #f9efdb;
+  --paper-deep: #e3cfa6;
+  --paper-shadow: #cdb283;
 
-  /* Typography */
-  --font-heading: 'Cinzel', serif;
-  --font-heading-decorative: 'Cinzel Decorative', serif;
-  --font-body: 'EB Garamond', serif;
+  /* Ink */
+  --ink: #1d100b;
+  --ink-soft: #3d261b;
+  --ink-muted: #6b4b37;
+  --ink-faint: rgba(29, 16, 11, 0.55);
 
-  /* Spacing */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-  --spacing-3xl: 4rem;
+  /* Dark field */
+  --field: #160c08;
+  --field-raised: #22130d;
+  --field-edge: rgba(226, 190, 118, 0.22);
+  --field-text: #f3e7cf;
+  --field-text-muted: rgba(243, 231, 207, 0.72);
+  --field-text-faint: rgba(243, 231, 207, 0.5);
 
-  /* Shadows */
-  --shadow-sm: 0 2px 5px rgba(44, 24, 16, 0.12);
-  --shadow-md: 0 8px 22px rgba(44, 24, 16, 0.14);
-  --shadow-lg: 0 22px 55px rgba(24, 12, 7, 0.2);
-  --shadow-card: 0 10px 26px rgba(44, 24, 16, 0.13);
-  --shadow-card-hover: 0 18px 40px rgba(44, 24, 16, 0.19);
+  /* Gold thread */
+  --gold: #c9973a;
+  --gold-bright: #e6bf6a;
+  --gold-deep: #8a6320;
+  --gold-glow: rgba(230, 191, 106, 0.55);
 
-  /* Borders */
-  --border-radius-sm: 4px;
-  --border-radius-md: 8px;
-  --border-radius-lg: 12px;
+  /* Rubric */
+  --rubric: #8e2a17;
+  --rubric-deep: #6c1a0b;
 
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-normal: 250ms ease;
-  --transition-slow: 400ms ease;
+  /* Rules */
+  --rule: rgba(29, 16, 11, 0.16);
+  --rule-strong: rgba(29, 16, 11, 0.32);
+
+  /* Type */
+  --font-display: 'Cinzel Variable', 'Cinzel', 'Trajan Pro', 'Times New Roman', serif;
+  --font-body: 'EB Garamond Variable', 'EB Garamond', 'Iowan Old Style', Georgia, serif;
 
   /* Layout */
-  --max-width: 1080px;
-  --reading-width: 720px;
-  --timeline-width: 4px;
+  --measure: 66ch;
+  --page-width: 1120px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --nav-height: 4.25rem;
+  --year-column: 7.5rem;
+  --spine-column: 2.5rem;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-  /* Pottery palette (animated timeline) */
-  --pottery-black: #1A1008;
-  --pottery-terracotta: #C65D3E;
-  --pottery-red-light: #D4845A;
-  --pottery-cream: #E8C99B;
-  --pottery-gold-accent: #B8860B;
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-base: 260ms;
+  --dur-slow: 480ms;
+  --dur-focal: 900ms;
+
+  /* Elevation */
+  --shadow-sheet: 0 18px 40px -18px rgba(29, 16, 11, 0.45), 0 2px 6px rgba(29, 16, 11, 0.08);
+  --shadow-image: 0 24px 48px -22px rgba(29, 16, 11, 0.6);
+
+  color-scheme: light;
 }
 
-/* Reset and Base Styles */
 *,
 *::before,
 *::after {
@@ -75,96 +76,102 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 16px;
-  scroll-padding-top: 7rem;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--nav-height) + 1.5rem);
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  min-height: 100vh;
+  color: var(--ink);
   font-family: var(--font-body);
   font-size: 1.125rem;
-  line-height: 1.7;
-  color: var(--color-ink-black);
-  background-color: var(--color-papyrus-light);
-  min-height: 100vh;
+  line-height: 1.65;
+  background-color: var(--paper);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  background-image:
-    radial-gradient(circle at 10% 5%, rgba(184, 134, 11, 0.09), transparent 26rem),
-    radial-gradient(circle at 88% 28%, rgba(143, 47, 25, 0.06), transparent 34rem),
-    linear-gradient(
-      180deg,
-      var(--color-papyrus-cream) 0%,
-      var(--color-papyrus-light) 55%,
-      #efe0c2 100%
-    );
-  background-attachment: fixed;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: 'kern', 'liga', 'onum';
 }
 
 #root {
   min-height: 100vh;
 }
 
-/* Typography */
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 600;
-  line-height: 1.3;
-  color: var(--color-ink-black);
-}
-
-h1 {
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
-  letter-spacing: 0.09em;
-}
-
-h2 {
-  font-size: clamp(1.65rem, 3vw, 2.5rem);
-  letter-spacing: 0.06em;
-}
-
-h3 {
-  font-size: 1.5rem;
-  letter-spacing: 0.05em;
-}
-
+h1,
+h2,
+h3,
 h4 {
-  font-size: 1.25rem;
+  font-family: var(--font-display);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+  text-wrap: balance;
 }
 
 p {
-  margin-bottom: var(--spacing-md);
-}
-
-p:last-child {
-  margin-bottom: 0;
+  text-wrap: pretty;
 }
 
 a {
-  color: var(--color-accent-red);
-  text-decoration: none;
-  transition: color var(--transition-fast);
+  color: var(--rubric);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: rgba(142, 42, 23, 0.4);
+  transition: color var(--dur-fast) ease, text-decoration-color var(--dur-fast) ease;
 }
 
 a:hover {
-  color: var(--color-accent-red-dark);
+  color: var(--rubric-deep);
+  text-decoration-color: currentColor;
 }
 
 img {
+  display: block;
   max-width: 100%;
   height: auto;
-  display: block;
 }
 
 button {
-  font-family: var(--font-heading);
+  font: inherit;
+  color: inherit;
   cursor: pointer;
-  border: none;
+  border: 0;
   background: none;
 }
 
-/* Utility Classes */
+/* Browser surfaces carry the design too. */
+::selection {
+  color: var(--paper-bright);
+  background: var(--ink);
+}
+
+::-webkit-scrollbar {
+  width: 11px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--paper-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ink-muted);
+  border: 3px solid var(--paper-deep);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-soft);
+}
+
+:focus-visible {
+  outline: 2px solid var(--rubric);
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
 .visually-hidden {
   position: absolute;
   width: 1px;
@@ -177,67 +184,22 @@ button {
   border: 0;
 }
 
-.container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-lg);
-}
-
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-papyrus-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-ink-faded);
-  border-radius: 6px;
-  border: 3px solid var(--color-papyrus-dark);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-ink-brown);
-}
-
-/* Selection */
-::selection {
-  background: var(--color-accent-gold-light);
-  color: var(--color-ink-black);
-}
-
-/* Focus Styles */
-:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 3px;
-}
-
-/* Responsive Typography */
 @media (max-width: 768px) {
-  h1 {
-    font-size: clamp(2rem, 11vw, 3.15rem);
-    letter-spacing: 0.06em;
-  }
-
-  h2 {
-    font-size: 1.5rem;
-  }
-
-  h3 {
-    font-size: 1.25rem;
-  }
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: clamp(1.9rem, 10vw, 2.65rem);
+  :root {
+    --nav-height: 4.75rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

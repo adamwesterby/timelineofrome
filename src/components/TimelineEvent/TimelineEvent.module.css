@@ -1,298 +1,263 @@
-.event {
+.entry {
   position: relative;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr);
-  gap: clamp(0.8rem, 2vw, 1.35rem);
-}
-
-.major,
-.minor {
+  grid-template-columns: var(--year-column) var(--spine-column) minmax(0, 1fr);
   align-items: start;
-}
-
-.major:nth-child(odd),
-.minor:nth-child(odd) {
-  grid-template-areas: 'card dot year';
-}
-
-.major:nth-child(even),
-.minor:nth-child(even) {
-  grid-template-areas: 'year dot card';
-}
-
-.major:nth-child(odd) .card,
-.minor:nth-child(odd) .card {
-  grid-area: card;
-  justify-self: end;
-}
-
-.major:nth-child(even) .card,
-.minor:nth-child(even) .card {
-  grid-area: card;
-  justify-self: start;
-}
-
-.dot {
-  z-index: 2;
-  display: grid;
-  grid-area: dot;
-  width: 28px;
-  height: 28px;
-  place-items: center;
-  margin-top: 0.4rem;
-  border-radius: 50%;
-  background: var(--color-papyrus-light);
-}
-
-.dotInner {
-  width: 12px;
-  height: 12px;
-  background: var(--color-papyrus-cream);
-  border: 3px solid var(--color-accent-gold-text);
-  border-radius: 50%;
-  transition:
-    transform var(--transition-fast),
-    background-color var(--transition-fast);
-}
-
-.major .dotInner {
-  width: 17px;
-  height: 17px;
-  border: 4px solid var(--color-accent-red);
-}
-
-.event:hover .dotInner {
-  background: var(--color-accent-gold-light);
-  transform: scale(1.12);
-}
-
-.major:hover .dotInner {
-  background: var(--color-accent-red);
-}
-
-.yearBadge {
-  grid-area: year;
-  padding: 0.55rem var(--spacing-md) 0;
-}
-
-.major:nth-child(odd) .yearBadge,
-.minor:nth-child(odd) .yearBadge {
-  justify-self: start;
-  text-align: left;
-}
-
-.major:nth-child(even) .yearBadge,
-.minor:nth-child(even) .yearBadge {
-  justify-self: end;
-  text-align: right;
+  column-gap: var(--ledger-gap);
 }
 
 .year {
-  color: var(--color-ink-faded);
-  font-family: var(--font-heading);
+  margin: 0;
+  padding-top: 0.2rem;
+  color: var(--ink-muted);
+  font-family: var(--font-display);
   font-size: 0.92rem;
-  font-weight: 700;
-  letter-spacing: 0.07em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-align: right;
   white-space: nowrap;
+  transition: color var(--dur-base) ease;
 }
 
 .major .year {
-  color: var(--color-accent-red-dark);
-  font-size: 1.04rem;
+  color: var(--rubric);
+  font-size: 1rem;
+  font-weight: 700;
 }
 
-.card {
-  width: min(100%, 470px);
-  overflow: hidden;
-  background: var(--color-surface-raised);
-  border: 1px solid rgba(92, 61, 46, 0.28);
-  border-radius: 14px;
-  transition:
-    box-shadow var(--transition-normal),
-    transform var(--transition-normal),
-    border-color var(--transition-normal);
+.entry[data-reached='true'] .year {
+  color: var(--ink);
 }
 
-.major .card {
-  border-top: 3px solid var(--color-accent-red);
+.major[data-reached='true'] .year {
+  color: var(--rubric);
 }
 
-.card:hover {
-  border-color: rgba(92, 61, 46, 0.4);
-  box-shadow: var(--shadow-card-hover);
-}
-
-.cardButton {
-  width: 100%;
-  padding: 0;
-  color: var(--color-ink-black);
-  font-family: inherit;
-  text-align: left;
-  background: transparent;
-  border: 0;
-}
-
-.cardButton:focus-visible {
-  outline: 3px solid var(--color-focus);
-  outline-offset: -5px;
-}
-
-.imageWrapper {
+/* Dot on the spine: a ring that fills with gold once the reading line passes it. */
+.dot {
   position: relative;
-  width: 100%;
+  z-index: 1;
+  display: block;
+  width: 11px;
+  height: 11px;
+  margin: 0.5rem auto 0;
+  background: var(--paper);
+  border: 1.5px solid var(--ink-muted);
+  border-radius: 50%;
+  transition: border-color var(--dur-base) ease;
+}
+
+.major .dot {
+  width: 15px;
+  height: 15px;
+  margin-top: 0.45rem;
+  border-width: 2px;
+  border-color: var(--rubric);
+}
+
+.dot::after {
+  position: absolute;
+  inset: 2px;
+  content: '';
+  background: var(--gold-bright);
+  border-radius: 50%;
+  transform: scale(0);
+  transition: transform 380ms var(--ease-out), box-shadow 380ms var(--ease-out);
+}
+
+.entry[data-reached='true'] .dot {
+  border-color: var(--gold-deep);
+}
+
+.major[data-reached='true'] .dot {
+  border-color: var(--rubric);
+}
+
+.entry[data-reached='true'] .dot::after {
+  transform: scale(1);
+  box-shadow: 0 0 0 4px rgba(230, 191, 106, 0.25);
+}
+
+.body {
+  position: relative;
+  max-width: 44rem;
+  padding-top: 0.2rem;
+}
+
+.major .body {
+  max-width: 46rem;
+}
+
+/* The picture sits in shadow until the reading line reaches it, then comes into light. */
+.figure {
+  position: relative;
+  margin: 0 0 1.5rem;
   overflow: hidden;
   aspect-ratio: 16 / 9;
-  background: var(--color-papyrus-dark);
+  background: var(--paper-deep);
+  border-radius: 4px;
+  box-shadow: var(--shadow-image);
+}
+
+.figure::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: '';
+  box-shadow: inset 0 0 0 1px rgba(29, 16, 11, 0.12);
+  background: linear-gradient(180deg, rgba(29, 16, 11, 0) 60%, rgba(29, 16, 11, 0.28) 100%);
+  border-radius: inherit;
 }
 
 .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: saturate(0.78) sepia(0.1) contrast(1.04);
-  transition:
-    transform var(--transition-slow),
-    filter var(--transition-slow);
+  filter: saturate(0.6) sepia(0.4) brightness(0.78) contrast(1.02);
+  transform: scale(1.04);
+  transition: transform 1400ms var(--ease-out), filter 1100ms var(--ease-out);
 }
 
-.card:hover .image {
-  filter: saturate(0.94) sepia(0.03) contrast(1.04);
-  transform: scale(1.025);
+.entry[data-reached='true'] .image {
+  filter: saturate(0.85) sepia(0.1) brightness(1) contrast(1.04);
+  transform: scale(1.01);
 }
 
-.imageOverlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: linear-gradient(180deg, transparent 58%, rgba(36, 19, 13, 0.38));
-}
-
-.content {
-  padding: 1.25rem 1.35rem 1.2rem;
-}
-
-.minor .content {
-  padding: 1.05rem 1.2rem;
+.entry[data-reached='true']:hover .image {
+  filter: saturate(0.98) sepia(0.03) brightness(1) contrast(1.04);
+  transform: scale(1.035);
 }
 
 .title {
-  margin: 0 0 var(--spacing-sm);
-  color: var(--color-ink-black);
-  font-family: var(--font-heading);
-  font-size: 1.18rem;
-  font-weight: 700;
-  line-height: 1.35;
-  letter-spacing: 0.015em;
-  text-wrap: balance;
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
 }
 
-.minor .title {
-  font-size: 1.05rem;
+.major .title {
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.titleButton {
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-align: left;
+  text-wrap: balance;
+  background: none;
+  border: 0;
+  transition: color var(--dur-fast) ease;
+}
+
+.titleButton:hover {
+  color: var(--rubric);
+}
+
+.titleButton:focus-visible {
+  outline-offset: 5px;
 }
 
 .summary {
-  margin: 0 0 var(--spacing-md);
-  color: var(--color-ink-brown);
-  font-family: var(--font-body);
-  font-size: 1.01rem;
-  line-height: 1.58;
+  max-width: var(--measure);
+  margin: 0.6rem 0 0;
+  color: var(--ink-soft);
+  font-size: 1.08rem;
+  line-height: 1.6;
 }
 
-.expandHint {
+.major .summary {
+  font-size: 1.15rem;
+}
+
+.toggle {
   display: inline-flex;
+  min-height: 40px;
+  margin-top: 0.5rem;
+  padding: 0;
   align-items: center;
-  gap: var(--spacing-xs);
-  min-height: 28px;
-  color: var(--color-accent-red-dark);
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-style: normal;
+  gap: 0.5rem;
+  color: var(--rubric);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
+  transition: color var(--dur-fast) ease;
 }
 
-.expandIcon {
-  color: currentColor;
+.toggle:hover {
+  color: var(--rubric-deep);
+}
+
+.toggle:focus-visible {
+  outline-offset: 6px;
+}
+
+.toggleIcon {
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.open .toggleIcon {
+  transform: rotate(180deg);
 }
 
 @media (max-width: 768px) {
-  .event,
-  .major,
-  .minor,
-  .major:nth-child(odd),
-  .major:nth-child(even),
-  .minor:nth-child(odd),
-  .minor:nth-child(even) {
-    grid-template-columns: 38px minmax(0, 1fr);
-    grid-template-areas:
-      'dot year'
-      'dot card';
-    gap: 0.45rem 0.75rem;
-  }
-
-  .dot {
-    grid-area: dot;
-    justify-self: center;
-    width: 26px;
-    height: 26px;
-    margin-top: 0;
-  }
-
-  .yearBadge,
-  .major:nth-child(odd) .yearBadge,
-  .major:nth-child(even) .yearBadge,
-  .minor:nth-child(odd) .yearBadge,
-  .minor:nth-child(even) .yearBadge {
-    grid-area: year;
-    justify-self: start;
-    padding: 0 0 0.15rem;
-    text-align: left;
-  }
-
-  .card,
-  .major .card,
-  .major:nth-child(odd) .card,
-  .major:nth-child(even) .card,
-  .minor:nth-child(odd) .card,
-  .minor:nth-child(even) .card {
-    grid-area: card;
-    justify-self: stretch;
-    width: 100%;
-  }
-
   .year {
-    font-size: 0.88rem;
+    padding-top: 0.3rem;
+    font-size: 0.74rem;
+    line-height: 1.3;
+    letter-spacing: 0.04em;
+    white-space: normal;
   }
 
   .major .year {
-    font-size: 0.96rem;
+    font-size: 0.8rem;
   }
 
-  .content,
-  .minor .content {
-    padding: 1rem;
+  .dot {
+    margin-top: 0.45rem;
   }
 
-  .title,
-  .minor .title {
-    font-size: 1.04rem;
+  .major .dot {
+    width: 13px;
+    height: 13px;
+    margin-top: 0.4rem;
   }
 
-  .summary {
-    font-size: 0.98rem;
+  .body {
+    padding-top: 0.1rem;
+  }
+
+  /* Pictures break the margin and run edge to edge; the thread resumes beneath them. */
+  .figure {
+    z-index: 1;
+    margin: 0 0 1rem calc(-1 * (var(--year-column) + var(--spine-column) + 2 * var(--ledger-gap)));
+    border-radius: 3px;
+  }
+
+  .major .title {
+    font-size: 1.3rem;
+  }
+
+  .summary,
+  .major .summary {
+    font-size: 1.02rem;
     line-height: 1.55;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card,
   .image,
-  .dotInner {
-    transition-duration: 0.01ms;
-  }
-
-  .card:hover .image {
+  .entry[data-reached='true'] .image {
+    filter: saturate(0.85) sepia(0.1) contrast(1.04);
     transform: none;
   }
 }

@@ -1,0 +1,242 @@
+.hero {
+  position: relative;
+  display: grid;
+  min-height: calc(100vh - var(--nav-height));
+  min-height: calc(100svh - var(--nav-height));
+  padding: calc(var(--safe-top) + 4rem) var(--gutter) 3.5rem;
+  place-items: center;
+  overflow: hidden;
+  color: var(--field-text);
+  background: var(--field);
+}
+
+.field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(70rem 42rem at 50% 118%, rgba(201, 151, 58, 0.28), transparent 62%),
+    radial-gradient(40rem 26rem at 50% -14%, rgba(230, 191, 106, 0.16), transparent 70%),
+    linear-gradient(180deg, #1b0e09 0%, var(--field) 55%, #110805 100%);
+}
+
+.field::after {
+  position: absolute;
+  inset: 1.25rem;
+  content: '';
+  border: 1px solid var(--field-edge);
+  opacity: 0;
+  animation: frame 1200ms var(--ease-out) 900ms forwards;
+}
+
+.inner {
+  position: relative;
+  display: flex;
+  width: min(100%, 56rem);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  margin: 0;
+  color: var(--field-text);
+  font-size: clamp(3rem, 10.5vw, 6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+}
+
+.titleLine {
+  display: block;
+  clip-path: inset(-0.2em 0 -0.25em 0);
+  animation: carve var(--dur-focal) var(--ease-out) both;
+}
+
+.titleLine + .titleLine {
+  animation-delay: 120ms;
+}
+
+.range {
+  display: flex;
+  margin: 2rem 0 0;
+  align-items: center;
+  gap: 1rem;
+  color: var(--gold-bright);
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 1.6vw, 1rem);
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-indent: 0.32em;
+  white-space: nowrap;
+  animation: rise 700ms var(--ease-out) 520ms both;
+}
+
+.rangeRule {
+  position: relative;
+  display: block;
+  width: clamp(3rem, 9vw, 6rem);
+  height: 1px;
+  background: var(--gold);
+  transform-origin: center;
+  animation: draw 800ms var(--ease-out) 640ms both;
+}
+
+.rangeRule::before {
+  position: absolute;
+  top: -3px;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  content: '';
+  background: var(--gold-bright);
+  transform: translateX(-50%) rotate(45deg);
+}
+
+.tagline {
+  max-width: 34ch;
+  margin: 2rem 0 0;
+  color: var(--field-text-muted);
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
+  font-style: italic;
+  line-height: 1.5;
+  animation: rise 700ms var(--ease-out) 760ms both;
+}
+
+.cue {
+  display: inline-flex;
+  margin-top: clamp(3rem, 8vh, 5.5rem);
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+  color: var(--field-text-muted);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-indent: 0.22em;
+  text-transform: uppercase;
+  text-decoration: none;
+  animation: rise 700ms var(--ease-out) 1000ms both;
+  transition: color var(--dur-base) ease;
+}
+
+.cue:hover,
+.cue:focus-visible {
+  color: var(--gold-bright);
+}
+
+.cueLine {
+  position: relative;
+  display: block;
+  width: 1px;
+  height: 3.25rem;
+  overflow: hidden;
+  background: rgba(230, 191, 106, 0.25);
+}
+
+.cueLine::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  background: var(--gold-bright);
+  transform-origin: top;
+  animation: run 2200ms var(--ease-in-out) 1400ms infinite;
+}
+
+@keyframes carve {
+  from {
+    opacity: 0;
+    transform: translateY(0.45em);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes frame {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes run {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: calc(var(--safe-top) + 3rem) 1.5rem 3rem;
+  }
+
+  .field::after {
+    inset: 0.75rem;
+  }
+
+  .title {
+    letter-spacing: 0.045em;
+  }
+
+  .tagline {
+    max-width: 28ch;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .titleLine,
+  .range,
+  .rangeRule,
+  .tagline,
+  .cue,
+  .field::after {
+    animation: none;
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+
+  .cueLine::after {
+    animation: none;
+    transform: none;
+  }
+}
